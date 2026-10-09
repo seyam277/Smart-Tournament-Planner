@@ -1,0 +1,235 @@
+:root {
+  /* New Unique Design System: Deep Tech / Premium Sport */
+  --primary-gradient: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  --cric-green: #00ff85;
+  --cric-black: #0f172a;
+  --cric-light-gray: #1e293b;
+  --cric-border: #334155;
+  --cric-white: #ffffff;
+
+  /* Sport Themes with Unique Glowing Accents */
+  --football-glow: #38bdf8;
+  --cricket-glow: #4ade80;
+  --badminton-glow: #f472b6;
+  --basketball-glow: #fb923c;
+
+  --primary: #00ff85;
+  --accent: #00ff85;
+  --text: #f8fafc;
+  --text-dim: #94a3b8;
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --border: #334155;
+
+  --sans: 'Outfit', 'Inter', system-ui, sans-serif;
+  font: 16px/1.5 var(--sans);
+  color: var(--text);
+  background: var(--bg);
+}
+
+
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--heading);
+  color: var(--cric-black);
+  margin-bottom: 1rem;
+}
+
+/* Layout Components */
+.container {
+  width: 1200px;
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.card {
+  background: var(--cric-white);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--cric-border);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--cric-green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--cric-dark-green);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--cric-green);
+  color: var(--cric-green);
+}
+
+.btn-outline:hover {
+  background: rgba(0, 146, 112, 0.05);
+}
+
+/* Navigation Styles */
+.navbar {
+  background: var(--cric-green);
+  color: white;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.navbar-logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  text-decoration: none;
+  font-style: italic;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 20px 10px;
+  transition: background 0.2s;
+}
+
+.navbar-links a:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.navbar-sub {
+  background: #222;
+  color: white;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+/* Multi-step Wizard Styles */
+.wizard-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.wizard-step {
+  flex: 1;
+  text-align: center;
+  z-index: 1;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  background: white;
+  border: 2px solid var(--cric-border);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.wizard-step.active .step-number {
+  border-color: var(--cric-green);
+  color: var(--cric-green);
+}
+
+.wizard-step.completed .step-number {
+  background: var(--cric-green);
+  border-color: var(--cric-green);
+  color: white;
+}
+
+/* Match Cards */
+.match-card {
+  padding: 15px;
+  cursor: pointer;
+}
+
+.match-header {
+  font-size: 12px;
+  color: var(--cric-gray);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.match-team {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.team-score {
+  font-weight: 700;
+}
+
+.match-status {
+  font-size: 13px;
+  color: #d0021b; /* Red for status like "Live" or match result */
+  margin-top: 10px;
+}
+

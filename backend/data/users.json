@@ -1,0 +1,20 @@
+[
+  {
+    "id": "002d9830-2099-46d2-aaae-91db91be7ce6",
+    "name": "Md.Mahabubilla Seyam",
+    "email": "2023-3-60-277@std.ewubd.edu",
+    "password": "$2a$10$TGIhPrn6V9js4/U5Me.HnO.htIVIHwhX5Z0HdsjzwZvN4h4FiwliS",
+    "phone": "034434343",
+    "createdAt": "2026-04-25T10:11:08.567Z",
+    "updatedAt": "2026-04-25T10:11:08.567Z"
+  },
+  {
+    "id": "73ab38f5-7b23-4239-9038-33a3ed5e94ae",
+    "name": "Test Organizer",
+    "email": "test@example.com",
+    "password": "$2a$10$eUjSq90vEjjPlYBBLzU4KucsFKax5VCur2fGQusSC3YhJwkK55Ae2",
+    "phone": "+880123456789",
+    "createdAt": "2026-04-25T10:25:33.914Z",
+    "updatedAt": "2026-04-25T10:25:33.914Z"
+  }
+]

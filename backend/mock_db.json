@@ -1,0 +1,1106 @@
+{
+  "users": [
+    {
+      "_id": "user1",
+      "id": "user1",
+      "name": "Mahabubilla Seyam",
+      "email": "mahabubillaseyam00@gmail.com",
+      "password": "$2a$10$rOfmmXQYJW4bAOKnWChGCO5k.kSwMzwoXeAiqh3IdZojU2WFqslFO",
+      "phone": "01700000000"
+    },
+    {
+      "_id": "user2",
+      "id": "user2",
+      "name": "EWU Student",
+      "email": "2023-3-60-277@std.ewubd.edu",
+      "password": "$2a$10$OOq9QGnag9F9STuRWOn8O.4iqLH92oa33kQPFx1md4dx2xKi1HNn.",
+      "phone": "01800000000"
+    },
+    {
+      "_id": "user3",
+      "id": "user3",
+      "name": "Test Organizer",
+      "email": "test@example.com",
+      "password": "$2a$10$cz5hgGCyaShpCrW6YIUFiesyJXWaJgQFFM.ydZjUr2pCzsEbZuoxO",
+      "phone": "01900000000"
+    },
+    {
+      "name": "Saif Al Mahmud",
+      "email": "saifalmahmod@gmail.com",
+      "password": "$2a$10$9/JusHhtGZ32s6uwVoNP.eeGxblXz0/5nietQOgITOpqk9DpmEXqG",
+      "phone": "+8801715366000",
+      "_id": "1777129372370",
+      "id": "1777129372370"
+    },
+    {
+      "name": "Mahabubilla Seyam",
+      "email": "shmahabubillaseyam@gmail.com",
+      "password": "$2a$10$jueuBxsGn/M26X0MOy6BcObq1sCuSPMNRbb/bt1zWEjrVz7LuqTye",
+      "phone": "0964444",
+      "_id": "1777236732036",
+      "id": "1777236732036"
+    }
+  ],
+  "tournaments": [
+    {
+      "_id": "t1",
+      "id": "t1",
+      "name": "EWU footbal festa",
+      "sport": "Football",
+      "startDate": "2026-06-15",
+      "endDate": "2026-06-25",
+      "location": "EWU Field",
+      "organizerId": "user1",
+      "creatorEmail": "mahabubillaseyam00@gmail.com",
+      "status": "Active",
+      "rules": "1. 7-a-side matches.\n2. 20 minutes per half.\n3. Rolling substitutions.",
+      "teams": [
+        {
+          "name": "CSE Strikers",
+          "id": "team1"
+        },
+        {
+          "name": "BBA Blasters",
+          "id": "team2"
+        },
+        {
+          "name": "EEE Warriors",
+          "id": "team3"
+        }
+      ],
+      "budget": {
+        "total": "20000",
+        "food": "5000",
+        "venue": "2000",
+        "transport": "1000"
+      },
+      "prizeMoney": {
+        "first": "10000",
+        "second": "5000"
+      },
+      "canEdit": true,
+      "matches": [
+        {
+          "team1Id": "EEE Warriors",
+          "team2Id": "BBA Blasters",
+          "matchDate": "2026-06-15",
+          "matchTime": "15:00",
+          "venue": "EWU Field",
+          "team1Name": "EEE Warriors",
+          "team2Name": "BBA Blasters",
+          "tournamentId": "t1",
+          "matchNumber": "3rd Match",
+          "id": "1777236392326",
+          "status": "Completed",
+          "score1": 2,
+          "score2": 1,
+          "playerPerformances": [],
+          "score1Full": "2",
+          "score2Full": "1",
+          "resultSummary": "EEE Warriors won by 1 goals",
+          "winnerId": "EEE Warriors",
+          "winnerName": "EEE Warriors",
+          "manOfTheMatch": ""
+        },
+        {
+          "team1Id": "CSE Strikers",
+          "team2Id": "BBA Blasters",
+          "matchDate": "2026-06-15",
+          "matchTime": "15:00",
+          "venue": "EWU Field",
+          "team1Name": "CSE Strikers",
+          "team2Name": "BBA Blasters",
+          "tournamentId": "t1",
+          "matchNumber": "3rd Match",
+          "id": "1777236491464",
+          "status": "Completed",
+          "score1": 3,
+          "score2": 1,
+          "playerPerformances": [],
+          "score1Full": "3",
+          "score2Full": "1",
+          "resultSummary": "CSE Strikers won by 2 goals",
+          "winnerId": "CSE Strikers",
+          "winnerName": "CSE Strikers",
+          "manOfTheMatch": ""
+        },
+        {
+          "team1Id": "CSE Strikers",
+          "team2Id": "BBA Blasters",
+          "matchDate": "2026-06-15",
+          "matchTime": "14:49",
+          "venue": "EWU Field",
+          "team1Name": "CSE Strikers",
+          "team2Name": "BBA Blasters",
+          "tournamentId": "t1",
+          "matchNumber": "3rd Match",
+          "id": "1777236552516",
+          "status": "Completed",
+          "score1": 1,
+          "score2": 1,
+          "playerPerformances": [],
+          "score1Full": "1",
+          "score2Full": "1",
+          "resultSummary": "Match Drawn",
+          "winnerId": null,
+          "winnerName": "",
+          "manOfTheMatch": ""
+        },
+        {
+          "team1Id": "EEE Warriors",
+          "team2Id": "CSE Strikers",
+          "matchDate": "2026-06-16",
+          "matchTime": "15:33",
+          "venue": "EWU Field",
+          "team1Name": "EEE Warriors",
+          "team2Name": "CSE Strikers",
+          "tournamentId": "t1",
+          "matchNumber": "4th Match",
+          "id": "1777237520610",
+          "status": "Completed",
+          "score1": 2,
+          "score2": 1,
+          "playerPerformances": [],
+          "score1Full": "2",
+          "score2Full": "1",
+          "resultSummary": "EEE Warriors won by 1 goals",
+          "winnerId": "EEE Warriors",
+          "winnerName": "EEE Warriors",
+          "manOfTheMatch": ""
+        }
+      ],
+      "updatedAt": "2026-04-26T21:09:04.876Z",
+      "manualStandings": [
+        {
+          "teamName": "CSE Strikers",
+          "played": 0,
+          "won": 0,
+          "lost": 0,
+          "drawn": 0,
+          "points": 0,
+          "netScore": 0,
+          "netRate": 0
+        },
+        {
+          "teamName": "BBA Blasters",
+          "played": 0,
+          "won": 0,
+          "lost": 0,
+          "drawn": 0,
+          "points": 0,
+          "netScore": 0,
+          "netRate": 0
+        },
+        {
+          "teamName": "EEE Warriors",
+          "played": 0,
+          "won": 0,
+          "lost": 0,
+          "drawn": 0,
+          "points": 0,
+          "netScore": 0,
+          "netRate": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "_id": "t2",
+      "id": "t2",
+      "name": "EWU Club Festa",
+      "sport": "Football",
+      "startDate": "2026-07-10",
+      "endDate": "2026-07-20",
+      "location": "Aftabnagar Ground",
+      "organizerId": "user2",
+      "creatorEmail": "2023-3-60-277@std.ewubd.edu",
+      "status": "Active",
+      "rules": "1. Standard Football Rules.\n2. 90 minutes match.",
+      "teams": [
+        {
+          "name": "Robotics Club",
+          "id": "team4"
+        },
+        {
+          "name": "Business Club",
+          "id": "team5"
+        }
+      ],
+      "budget": {
+        "total": "50000",
+        "food": "15000",
+        "venue": "10000"
+      },
+      "prizeMoney": {
+        "first": "25000",
+        "second": "10000"
+      },
+      "canEdit": true,
+      "manualMatchSummary": [
+        {
+          "matchNo": "1st Match",
+          "date": "2026-05-01",
+          "team1": "Robotics Club",
+          "team2": "Business Club",
+          "result": "0 vs 3",
+          "winner": "Business Club",
+          "margin": "3 goals",
+          "topScorer": "-",
+          "topWicketTaker": "-",
+          "playerOfMatch": "-"
+        },
+        {
+          "matchNo": "2nd Match",
+          "date": "2026-05-02",
+          "team1": "Robotics Club",
+          "team2": "Business Club",
+          "result": "2 vs 1",
+          "winner": "Robotics Club",
+          "margin": "1 goals",
+          "topScorer": "-",
+          "topWicketTaker": "-",
+          "playerOfMatch": "-"
+        },
+        {
+          "matchNo": "3rd Match",
+          "date": "2026-05-02",
+          "team1": "Robotics Club",
+          "team2": "Business Club",
+          "result": "2 vs 1",
+          "winner": "Robotics Club",
+          "margin": "2 goals",
+          "topScorer": "-",
+          "topWicketTaker": "-",
+          "playerOfMatch": "-"
+        },
+        {
+          "matchNo": "4th Match",
+          "date": "2026-07-14",
+          "team1": "Robotics Club",
+          "team2": "Business Club",
+          "result": "0 vs 0",
+          "winner": "",
+          "margin": "1 goals",
+          "topScorer": "-",
+          "topWicketTaker": "-",
+          "playerOfMatch": "-"
+        }
+      ],
+      "updatedAt": "2026-04-26T20:41:51.200Z",
+      "manualStandings": [
+        {
+          "teamName": "Robotics Club",
+          "played": 4,
+          "won": 3,
+          "lost": 1,
+          "drawn": 0,
+          "points": 9,
+          "netScore": 1,
+          "netRate": 0.25
+        },
+        {
+          "teamName": "Business Club",
+          "played": 4,
+          "won": 1,
+          "lost": 3,
+          "drawn": 0,
+          "points": 3,
+          "netScore": -1,
+          "netRate": -0.25
+        }
+      ],
+      "manualTournamentSummary": {
+        "total": 0,
+        "completed": 0,
+        "live": 0,
+        "upcoming": 0
+      },
+      "manualMatchLogs": [
+        "â€¢ hi"
+      ],
+      "manualTopPerformers": [
+        {
+          "label": "Top Goal Scorer",
+          "name": "N/A",
+          "team": "N/A",
+          "value": 0,
+          "suffix": "Goals"
+        }
+      ],
+      "matches": [
+        {
+          "team1Id": "Robotics Club",
+          "team2Id": "Business Club",
+          "matchDate": "2026-05-01",
+          "matchTime": "00:00",
+          "venue": "east court",
+          "team1Name": "Robotics Club",
+          "team2Name": "Business Club",
+          "tournamentId": "t2",
+          "matchNumber": "1st Match",
+          "id": "1777230229673",
+          "status": "Completed",
+          "score1": 0,
+          "score2": 3,
+          "playerPerformances": [],
+          "score1Full": "0",
+          "score2Full": "3",
+          "resultSummary": "Business Club won by 3 goals",
+          "winnerId": "team5",
+          "winnerName": "Business Club",
+          "manOfTheMatch": ""
+        },
+        {
+          "team1Id": "Robotics Club",
+          "team2Id": "Business Club",
+          "matchDate": "2026-05-02",
+          "matchTime": "10:00",
+          "venue": "eastcourt",
+          "team1Name": "Robotics Club",
+          "team2Name": "Business Club",
+          "tournamentId": "t2",
+          "matchNumber": "2nd Match",
+          "id": "1777233691658",
+          "status": "Completed",
+          "score1": 2,
+          "score2": 1,
+          "playerPerformances": [],
+          "score1Full": "2",
+          "score2Full": "1",
+          "resultSummary": "Robotics Club won by 1 goals",
+          "winnerId": "Robotics Club",
+          "winnerName": "Robotics Club",
+          "manOfTheMatch": ""
+        },
+        {
+          "team1Id": "Robotics Club",
+          "team2Id": "Business Club",
+          "matchDate": "2026-05-02",
+          "matchTime": "15:00",
+          "venue": "eastcourt",
+          "team1Name": "Robotics Club",
+          "team2Name": "Business Club",
+          "tournamentId": "t2",
+          "matchNumber": "3rd Match",
+          "id": "1777234657443",
+          "status": "Completed",
+          "score1": 2,
+          "score2": 0,
+          "playerPerformances": [],
+          "score1Full": "2",
+          "score2Full": "1",
+          "resultSummary": "Robotics Club won by 2 goals",
+          "winnerId": "Robotics Club",
+          "winnerName": "Robotics Club",
+          "manOfTheMatch": ""
+        },
+        {
+          "team1Id": "Robotics Club",
+          "team2Id": "Business Club",
+          "matchDate": "2026-07-14",
+          "matchTime": "20:08",
+          "venue": "east court",
+          "team1Name": "Robotics Club",
+          "team2Name": "Business Club",
+          "tournamentId": "t2",
+          "matchNumber": "4th Match",
+          "id": "1777235744363",
+          "status": "Completed",
+          "score1": 0,
+          "score2": -1,
+          "playerPerformances": [],
+          "score1Full": "0",
+          "score2Full": "0",
+          "resultSummary": "Robotics Club won by 1 goals",
+          "winnerId": "Robotics Club",
+          "winnerName": "Robotics Club",
+          "manOfTheMatch": ""
+        }
+      ],
+      "players": []
+    },
+    {
+      "name": "IUT  badminton Festa",
+      "sport": "Badminton",
+      "location": "",
+      "startDate": "2026-05-01",
+      "endDate": "2026-05-02",
+      "format": "League",
+      "rules": "",
+      "teams": [],
+      "players": [],
+      "budget": {
+        "total": "",
+        "food": 0,
+        "transport": 0,
+        "venue": 0,
+        "equipment": 0,
+        "other": 0
+      },
+      "prizeMoney": {
+        "first": "",
+        "second": "",
+        "third": "",
+        "showToPublic": true
+      },
+      "organizerId": "user2",
+      "creatorEmail": "2023-3-60-277@std.ewubd.edu",
+      "status": "Active",
+      "createdAt": "2026-04-25T15:19:54.607Z",
+      "_id": "1777130394606",
+      "id": "1777130394607"
+    },
+    {
+      "_id": "t_test_cricket_1777240658164",
+      "id": "t_test_cricket_1777240658164",
+      "name": "Intra-University Cricket Cup 2026",
+      "sport": "Cricket",
+      "startDate": "2026-08-01",
+      "endDate": "2026-08-15",
+      "location": "Aftabnagar Main Stadium",
+      "organizerId": "1777236732036",
+      "creatorEmail": "shmahabubillaseyam@gmail.com",
+      "status": "Active",
+      "rules": "1. 20 Overs per side (T20).\n2. Standard ICC Rules apply.\n3. Powerplay in first 6 overs.",
+      "teams": [
+        {
+          "name": "CSE Titans",
+          "id": "t3-team1"
+        },
+        {
+          "name": "EEE Thunder",
+          "id": "t3-team2"
+        },
+        {
+          "name": "BBA Stallions",
+          "id": "t3-team3"
+        },
+        {
+          "name": "Pharmacy Phoenix",
+          "id": "t3-team4"
+        },
+        {
+          "name": "Civil Sharks",
+          "id": "t3-team5"
+        }
+      ],
+      "budget": {
+        "total": "100000",
+        "food": "20000",
+        "transport": "10000",
+        "venue": "30000",
+        "equipment": "15000",
+        "other": "10000",
+        "prizes": "25000"
+      },
+      "prizeMoney": {
+        "first": "50000",
+        "second": "20000",
+        "third": "10000",
+        "showToPublic": true
+      },
+      "players": [
+        {
+          "name": "Shakib Al Hasan",
+          "team": "CSE Titans",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Tamim Iqbal",
+          "team": "CSE Titans",
+          "role": "Batsman"
+        },
+        {
+          "name": "Mushfiqur Rahim",
+          "team": "CSE Titans",
+          "role": "Wicketkeeper"
+        },
+        {
+          "name": "Mustafizur Rahman",
+          "team": "CSE Titans",
+          "role": "Bowler"
+        },
+        {
+          "name": "Mahmudullah",
+          "team": "CSE Titans",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Taskin Ahmed",
+          "team": "CSE Titans",
+          "role": "Bowler"
+        },
+        {
+          "name": "Litton Das",
+          "team": "CSE Titans",
+          "role": "Batsman"
+        },
+        {
+          "name": "Chris Gayle",
+          "team": "EEE Thunder",
+          "role": "Batsman"
+        },
+        {
+          "name": "Andre Russell",
+          "team": "EEE Thunder",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Sunil Narine",
+          "team": "EEE Thunder",
+          "role": "Bowler"
+        },
+        {
+          "name": "Kieron Pollard",
+          "team": "EEE Thunder",
+          "role": "Batsman"
+        },
+        {
+          "name": "Dwayne Bravo",
+          "team": "EEE Thunder",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Nicholas Pooran",
+          "team": "EEE Thunder",
+          "role": "Wicketkeeper"
+        },
+        {
+          "name": "Jason Holder",
+          "team": "EEE Thunder",
+          "role": "Bowler"
+        },
+        {
+          "name": "Virat Kohli",
+          "team": "BBA Stallions",
+          "role": "Batsman"
+        },
+        {
+          "name": "Rohit Sharma",
+          "team": "BBA Stallions",
+          "role": "Batsman"
+        },
+        {
+          "name": "MS Dhoni",
+          "team": "BBA Stallions",
+          "role": "Wicketkeeper"
+        },
+        {
+          "name": "Jasprit Bumrah",
+          "team": "BBA Stallions",
+          "role": "Bowler"
+        },
+        {
+          "name": "Hardik Pandya",
+          "team": "BBA Stallions",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Ravindra Jadeja",
+          "team": "BBA Stallions",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Mohammed Shami",
+          "team": "BBA Stallions",
+          "role": "Bowler"
+        },
+        {
+          "name": "Steve Smith",
+          "team": "Pharmacy Phoenix",
+          "role": "Batsman"
+        },
+        {
+          "name": "David Warner",
+          "team": "Pharmacy Phoenix",
+          "role": "Batsman"
+        },
+        {
+          "name": "Pat Cummins",
+          "team": "Pharmacy Phoenix",
+          "role": "Bowler"
+        },
+        {
+          "name": "Glenn Maxwell",
+          "team": "Pharmacy Phoenix",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Mitchell Starc",
+          "team": "Pharmacy Phoenix",
+          "role": "Bowler"
+        },
+        {
+          "name": "Alex Carey",
+          "team": "Pharmacy Phoenix",
+          "role": "Wicketkeeper"
+        },
+        {
+          "name": "Marcus Stoinis",
+          "team": "Pharmacy Phoenix",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Jos Buttler",
+          "team": "Civil Sharks",
+          "role": "Wicketkeeper"
+        },
+        {
+          "name": "Ben Stokes",
+          "team": "Civil Sharks",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Jofra Archer",
+          "team": "Civil Sharks",
+          "role": "Bowler"
+        },
+        {
+          "name": "Joe Root",
+          "team": "Civil Sharks",
+          "role": "Batsman"
+        },
+        {
+          "name": "Mark Wood",
+          "team": "Civil Sharks",
+          "role": "Bowler"
+        },
+        {
+          "name": "Moeen Ali",
+          "team": "Civil Sharks",
+          "role": "All-rounder"
+        },
+        {
+          "name": "Liam Livingstone",
+          "team": "Civil Sharks",
+          "role": "Batsman"
+        }
+      ],
+      "matches": [
+        {
+          "id": "m_test_1_1777240658164",
+          "matchNumber": "1st Match",
+          "team1Name": "CSE Titans",
+          "team2Name": "EEE Thunder",
+          "matchDate": "2026-08-01",
+          "matchTime": "10:00",
+          "venue": "Aftabnagar Main Stadium",
+          "status": "Completed",
+          "score1": 210,
+          "score2": 195,
+          "score1Full": "210-5 (20)",
+          "score2Full": "195-8 (20)",
+          "resultSummary": "CSE Titans won by 15 runs",
+          "winnerName": "CSE Titans",
+          "manOfTheMatch": "Shakib Al Hasan",
+          "playerPerformances": [
+            {
+              "playerName": "Shakib Al Hasan",
+              "runs": 55,
+              "wickets": 2
+            }
+          ]
+        },
+        {
+          "id": "m_test_2_1777240658164",
+          "matchNumber": "2nd Match",
+          "team1Name": "BBA Stallions",
+          "team2Name": "Pharmacy Phoenix",
+          "matchDate": "2026-08-01",
+          "matchTime": "14:00",
+          "venue": "Aftabnagar Main Stadium",
+          "status": "Completed",
+          "score1": 150,
+          "score2": 140,
+          "score1Full": "150-3 (15.2)",
+          "score2Full": "140-8(17.3)",
+          "resultSummary": "BBA Stallions are batting first",
+          "winnerId": null,
+          "winnerName": "",
+          "manOfTheMatch": "Jasprit Bumrah",
+          "playerPerformances": []
+        }
+      ],
+      "createdAt": "2026-04-26T21:57:38.165Z",
+      "canEdit": true,
+      "manualMatchSummary": [
+        {
+          "matchNo": "1st Match",
+          "date": "2026-08-01",
+          "team1": "CSE Titans",
+          "team2": "EEE Thunder",
+          "result": "210-5 (20) vs 195-8 (20)",
+          "winner": "CSE Titans",
+          "margin": "15 runs",
+          "topScorer": "Shakib Al Hasan (55)",
+          "topWicketTaker": "Shakib Al Hasan (2)",
+          "playerOfMatch": "Shakib Al Hasan"
+        },
+        {
+          "matchNo": "2nd Match",
+          "date": "2026-08-01",
+          "team1": "BBA Stallions",
+          "team2": "Pharmacy Phoenix",
+          "result": "Upcoming",
+          "winner": "-",
+          "margin": "-",
+          "topScorer": "-",
+          "topWicketTaker": "-",
+          "playerOfMatch": "-"
+        }
+      ],
+      "updatedAt": "2026-04-27T08:39:45.964Z"
+    },
+    {
+      "name": "EWU Club Tournament",
+      "sport": "Football",
+      "location": "Aftabnagar Ground",
+      "startDate": "2026-04-28",
+      "endDate": "2026-04-29",
+      "format": "League",
+      "rules": "",
+      "maxPlayersPerTeam": "5",
+      "teams": [
+        {
+          "name": "CoPC",
+          "category": "men",
+          "budget": "1000",
+          "id": 1777273741837
+        },
+        {
+          "name": "BC",
+          "category": "men",
+          "budget": "1000",
+          "id": 1777273763919
+        },
+        {
+          "name": "RC",
+          "category": "men",
+          "budget": "1000",
+          "id": 1777273787947
+        }
+      ],
+      "players": [
+        {
+          "name": "Rahim Khan",
+          "role": "Forward",
+          "team": "CoPC",
+          "jerseyNumber": "10",
+          "id": 1777273932252
+        },
+        {
+          "name": "Karim Ali",
+          "role": "Midfielder",
+          "team": "CoPC",
+          "jerseyNumber": "02",
+          "id": 1777273953741
+        },
+        {
+          "name": "Hasan Rafi",
+          "role": "Defender",
+          "team": "CoPC",
+          "jerseyNumber": "01",
+          "id": 1777273977909
+        },
+        {
+          "name": "Imran Hossain",
+          "role": "Goalkeeper",
+          "team": "CoPC",
+          "jerseyNumber": "09",
+          "id": 1777273997406
+        },
+        {
+          "name": "Javed Islam",
+          "role": "Forward",
+          "team": "CoPC",
+          "jerseyNumber": "08",
+          "id": 1777274015557
+        },
+        {
+          "name": "Arif Rahman",
+          "role": "Forward",
+          "team": "BC",
+          "jerseyNumber": "07",
+          "id": 1777274047081
+        },
+        {
+          "name": "Nayeem Ahmed",
+          "role": "Midfielder",
+          "team": "BC",
+          "jerseyNumber": "00",
+          "id": 1777274080044
+        },
+        {
+          "name": "Tarek Aziz",
+          "role": "Defender",
+          "team": "BC",
+          "jerseyNumber": "11",
+          "id": 1777274106168
+        },
+        {
+          "name": "Rony Das",
+          "role": "Goalkeeper",
+          "team": "BC",
+          "jerseyNumber": "03",
+          "id": 1777274132327
+        },
+        {
+          "name": "Sohag Mia",
+          "role": "Forward",
+          "team": "BC",
+          "jerseyNumber": "05",
+          "id": 1777274155734
+        },
+        {
+          "name": "Fahim Chowdhury",
+          "role": "Forward",
+          "team": "RC",
+          "jerseyNumber": "02",
+          "id": 1777274213362
+        },
+        {
+          "name": "Mehedi Hasan",
+          "role": "Midfielder",
+          "team": "RC",
+          "jerseyNumber": "06",
+          "id": 1777274236211
+        },
+        {
+          "name": "Suman Roy",
+          "role": "Defender",
+          "team": "RC",
+          "jerseyNumber": "11",
+          "id": 1777274257056
+        },
+        {
+          "name": "Rakib Uddin",
+          "role": "Goalkeeper",
+          "team": "RC",
+          "jerseyNumber": "55",
+          "id": 1777274277637
+        },
+        {
+          "name": "Biplob Saha",
+          "role": "Forward",
+          "team": "RC",
+          "jerseyNumber": "7",
+          "id": 1777274300819
+        }
+      ],
+      "budget": {
+        "total": "3000",
+        "food": "900",
+        "transport": "600",
+        "venue": "800",
+        "equipment": "500",
+        "other": "200"
+      },
+      "prizeMoney": {
+        "first": "1200",
+        "second": "600",
+        "third": "",
+        "showToPublic": true
+      },
+      "organizerId": "user2",
+      "creatorEmail": "2023-3-60-277@std.ewubd.edu",
+      "status": "Active",
+      "createdAt": "2026-04-27T07:21:00.149Z",
+      "_id": "1777274460149",
+      "id": "1777274460149",
+      "canEdit": true,
+      "matches": [
+        {
+          "team1Id": "BC",
+          "team2Id": "RC",
+          "matchDate": "2026-04-28",
+          "matchTime": "14:00",
+          "venue": "Aftabnagar Ground",
+          "team1Name": "BC",
+          "team2Name": "RC",
+          "tournamentId": "1777274460149",
+          "matchNumber": "3rd Match",
+          "id": "1777276432102",
+          "status": "Completed",
+          "score1": 2,
+          "score2": 1,
+          "playerPerformances": [],
+          "score1Full": "02",
+          "score2Full": "01",
+          "resultSummary": "BC won by 1 goals",
+          "winnerId": "BC",
+          "winnerName": "BC",
+          "manOfTheMatch": "Arif Rahman"
+        },
+        {
+          "team1Id": "CoPC",
+          "team2Id": "RC",
+          "matchDate": "2026-04-28",
+          "matchTime": "09:00",
+          "venue": "Aftabnagar Ground",
+          "team1Name": "CoPC",
+          "team2Name": "RC",
+          "tournamentId": "1777274460149",
+          "matchNumber": "2nd Match",
+          "id": "1777276536967",
+          "status": "Completed",
+          "score1": 3,
+          "score2": 2,
+          "playerPerformances": [],
+          "score1Full": "03",
+          "score2Full": "02",
+          "resultSummary": "hi",
+          "winnerId": null,
+          "winnerName": "",
+          "manOfTheMatch": "Imran Hossain"
+        },
+        {
+          "team1Id": "CoPC",
+          "team2Id": "BC",
+          "matchDate": "2026-04-28",
+          "matchTime": "11:00",
+          "venue": "Aftabnagar Ground",
+          "team1Name": "CoPC",
+          "team2Name": "BC",
+          "tournamentId": "1777274460149",
+          "matchNumber": "3rd Match",
+          "id": "1777276588013",
+          "status": "Completed",
+          "score1": 0,
+          "score2": 0,
+          "playerPerformances": [],
+          "score1Full": "0",
+          "score2Full": "0",
+          "resultSummary": "Match Drawn",
+          "winnerId": null,
+          "winnerName": "",
+          "manOfTheMatch": "Tarek Aziz"
+        },
+        {
+          "team1Id": "CoPC",
+          "team2Id": "BC",
+          "matchDate": "2026-04-29",
+          "matchTime": "18:30",
+          "venue": "Aftabnagar Ground",
+          "matchStage": "Final",
+          "team1Name": "CoPC",
+          "team2Name": "BC",
+          "tournamentId": "1777274460149",
+          "matchNumber": "4th Match",
+          "id": "1777277559123",
+          "status": "Completed",
+          "score1": 5,
+          "score2": 3,
+          "playerPerformances": [],
+          "score1Full": "05",
+          "score2Full": "03",
+          "resultSummary": "CoPC won by 2 goals",
+          "winnerId": "CoPC",
+          "winnerName": "CoPC",
+          "manOfTheMatch": "Javed Islam"
+        }
+      ],
+      "updatedAt": "2026-04-27T08:27:40.746Z",
+      "manualStandings": [],
+      "manualTopPerformers": [
+        {
+          "label": "Top Goal Scorer",
+          "name": "Rahim Khan",
+          "team": "CoPC",
+          "value": "4",
+          "suffix": "Goals"
+        }
+      ],
+      "manualTournamentSummary": {
+        "total": 4,
+        "completed": 4,
+        "live": 0,
+        "upcoming": 0
+      }
+    }
+  ],
+  "teams": [],
+  "players": [],
+  "matches": [
+    {
+      "tournamentId": "t1",
+      "team1Name": "CSE Strikers",
+      "team2Name": "BBA Blasters",
+      "status": "Live",
+      "score1": "2",
+      "score2": "1",
+      "venue": "Field A",
+      "matchDate": "2026-06-15"
+    }
+  ],
+  "turfs": [
+    {
+      "id": "turf_bashundhara",
+      "name": "Bashundhara Sports Arena",
+      "_id": "turf_bashundhara",
+      "hourlyRate": 1500,
+      "rating": 4.8,
+      "location": "Bashundhara R/A, Dhaka",
+      "facilities": [
+        "Floodlights",
+        "Changing Room",
+        "Parking",
+        "Drinking Water"
+      ]
+    },
+    {
+      "id": "turf_daffodil",
+      "name": "Daffodil Turf & Sports Complex",
+      "_id": "turf_daffodil",
+      "hourlyRate": 1200,
+      "rating": 4.6,
+      "location": "Mirpur, Dhaka",
+      "facilities": [
+        "Floodlights",
+        "Locker Room",
+        "Cafeteria"
+      ]
+    },
+    {
+      "id": "turf_united",
+      "name": "United Sports Arena",
+      "_id": "turf_united",
+      "hourlyRate": 1400,
+      "rating": 4.7,
+      "location": "Satarkul, Badda, Dhaka",
+      "facilities": [
+        "Turf Lighting",
+        "Parking",
+        "First Aid"
+      ]
+    },
+    {
+      "id": "turf_gulshan",
+      "name": "Gulshan Youth Arena",
+      "_id": "turf_gulshan",
+      "hourlyRate": 1800,
+      "rating": 4.9,
+      "location": "Gulshan-2, Dhaka",
+      "facilities": [
+        "FIFA Grade Turf",
+        "Air-conditioned Dugout",
+        "Dressing Rooms"
+      ]
+    },
+    {
+      "id": "turf_dhanmondi",
+      "name": "Dhanmondi Arena Turf",
+      "_id": "turf_dhanmondi",
+      "hourlyRate": 1300,
+      "rating": 4.5,
+      "location": "Dhanmondi, Dhaka",
+      "facilities": [
+        "Floodlights",
+        "Shower Room",
+        "Parking"
+      ]
+    }
+  ],
+  "bookings": [],
+  "reviews": [],
+  "slots": []
+}
