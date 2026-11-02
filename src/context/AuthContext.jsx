@@ -1,32 +1,39 @@
-import React, { createContext, useState, useEffect, useContext } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [organizer, setOrganizer] = useState(null)
-  const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'))
+  const [initialSession] = useState(() => {
+    const token = localStorage.getItem('authToken')
+    const savedUser = localStorage.getItem('organizerData')
+    if (!token || !savedUser) return { token: null, user: null }
+
+    try {
+      const user = JSON.parse(savedUser)
+      return { token, user: { ...user, role: user.role || 'organizer' } }
+    } catch {
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('organizerData')
+      localStorage.removeItem('user')
+      return { token: null, user: null }
+    }
+  })
+  const [organizer, setOrganizer] = useState(initialSession.user)
+  const [authToken, setAuthToken] = useState(initialSession.token)
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const token = localStorage.getItem('authToken')
-    const organizerData = localStorage.getItem('organizerData')
-    
-    if (token && organizerData) {
-      setAuthToken(token)
-      setOrganizer(JSON.parse(organizerData))
-    }
-  }, [])
-
-  const login = (token, organizerData) => {
+  const login = (token, userData) => {
+    const normalizedUser = { ...userData, role: userData.role || 'organizer' }
     localStorage.setItem('authToken', token)
-    localStorage.setItem('organizerData', JSON.stringify(organizerData))
+    localStorage.setItem('organizerData', JSON.stringify(normalizedUser))
     setAuthToken(token)
-    setOrganizer(organizerData)
+    setOrganizer(normalizedUser)
   }
 
   const logout = () => {
     localStorage.removeItem('authToken')
     localStorage.removeItem('organizerData')
+    localStorage.removeItem('user')
     setAuthToken(null)
     setOrganizer(null)
   }

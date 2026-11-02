@@ -160,6 +160,12 @@ const OrganizerLogin = () => {
             Initialize Account
           </Link>
         </p>
+        <p style={{ textAlign: 'center', marginTop: '12px', color: '#94a3b8', fontSize: '14px' }}>
+          Turf Authority?{' '}
+          <Link to="/authority/login" style={{ color: '#00ff85', textDecoration: 'none', fontWeight: '700' }}>
+            Authority Login
+          </Link>
+        </p>
         </div>
       </div>
     </div>

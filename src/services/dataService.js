@@ -15,7 +15,6 @@ const apiRequest = async (endpoint, options = {}) => {
     ...getAuthHeaders(),
     ...options.headers
   }
-  console.log(`[API] Sending ${options.method || 'GET'} ${endpoint}`, { headers })
   
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -25,10 +24,6 @@ const apiRequest = async (endpoint, options = {}) => {
     
     // If token is invalid or expired
     if (response.status === 401) {
-      console.error('[Auth] 401 Unauthorized detected. Token:', localStorage.getItem('authToken'))
-      // localStorage.removeItem('authToken')
-      // localStorage.removeItem('organizerData')
-      // window.location.href = '/login'
       const data = await response.json()
       throw new Error(data.error || 'Session expired. Please login again.')
     }
@@ -133,4 +128,3 @@ export const calculateTotalExpenses = async (tournamentId) => {
   const expenses = await getExpensesByTournament(tournamentId)
   return expenses.reduce((total, expense) => total + expense.amount, 0)
 }
-

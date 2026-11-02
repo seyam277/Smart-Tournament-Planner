@@ -39,6 +39,21 @@
       "phone": "0964444",
       "_id": "1777236732036",
       "id": "1777236732036"
+    },
+    {
+      "name": "Mrx",
+      "email": "mahabubillaseyam@gmail.com",
+      "password": "$2a$10$FG4SSJh2eo.PTkXgay38fOy.1ZK0KwZ8lSwZ9F0LgPxnl5lfAtWfS",
+      "phone": "0134444444",
+      "role": "authority",
+      "authorityProfile": {
+        "businessName": "best turf",
+        "businessContactNumber": "018000000",
+        "businessAddress": "aftabnagar,dhaka,bangladesh",
+        "preferredContact": "filed"
+      },
+      "_id": "1793640067784",
+      "id": "1793640067784"
     }
   ],
   "tournaments": [
@@ -1045,7 +1060,9 @@
         "Changing Room",
         "Parking",
         "Drinking Water"
-      ]
+      ],
+      "authorityId": "user1",
+      "authorityEmail": "mahabubillaseyam00@gmail.com"
     },
     {
       "id": "turf_daffodil",
@@ -1058,7 +1075,9 @@
         "Floodlights",
         "Locker Room",
         "Cafeteria"
-      ]
+      ],
+      "authorityId": "user1",
+      "authorityEmail": "mahabubillaseyam00@gmail.com"
     },
     {
       "id": "turf_united",
@@ -1071,7 +1090,9 @@
         "Turf Lighting",
         "Parking",
         "First Aid"
-      ]
+      ],
+      "authorityId": "user1",
+      "authorityEmail": "mahabubillaseyam00@gmail.com"
     },
     {
       "id": "turf_gulshan",
@@ -1084,7 +1105,9 @@
         "FIFA Grade Turf",
         "Air-conditioned Dugout",
         "Dressing Rooms"
-      ]
+      ],
+      "authorityId": "user1",
+      "authorityEmail": "mahabubillaseyam00@gmail.com"
     },
     {
       "id": "turf_dhanmondi",
@@ -1097,7 +1120,70 @@
         "Floodlights",
         "Shower Room",
         "Parking"
-      ]
+      ],
+      "authorityId": "user1",
+      "authorityEmail": "mahabubillaseyam00@gmail.com"
+    },
+    {
+      "name": "Best turf",
+      "description": "hi",
+      "sportType": "Football",
+      "address": "aftabnagar",
+      "location": "aftabnagar",
+      "area": "aftabnagar",
+      "city": "dhaka",
+      "district": "dhaka",
+      "contactNumber": "01562543739",
+      "facilities": [
+        "parking",
+        "cafe."
+      ],
+      "photos": [],
+      "coordinates": {
+        "latitude": -2,
+        "longitude": -2
+      },
+      "_id": "83676556-f2b5-48f7-8d60-fae7f8b2c856",
+      "id": "83676556-f2b5-48f7-8d60-fae7f8b2c856",
+      "authorityId": "1793640067784",
+      "registrationStatus": "pending",
+      "fields": [
+        {
+          "name": "1",
+          "sportType": "Football",
+          "surface": "223",
+          "dimensions": "",
+          "description": "as",
+          "_id": "6a5f8e80-398d-4c44-9857-141ea33ecaf0",
+          "id": "6a5f8e80-398d-4c44-9857-141ea33ecaf0",
+          "createdAt": "2026-11-02T17:25:14.710Z",
+          "updatedAt": "2026-11-02T17:25:14.710Z"
+        },
+        {
+          "name": "2",
+          "sportType": "Football",
+          "surface": "12",
+          "dimensions": "",
+          "description": "12",
+          "_id": "a3e8e80a-49c7-4c8f-8dba-a19d9baf860b",
+          "id": "a3e8e80a-49c7-4c8f-8dba-a19d9baf860b",
+          "createdAt": "2026-11-02T17:25:24.048Z",
+          "updatedAt": "2026-11-02T17:25:24.048Z"
+        },
+        {
+          "name": "12",
+          "sportType": "Football",
+          "surface": "21",
+          "dimensions": "",
+          "description": "dd",
+          "_id": "d3fa383e-6aee-456c-a5b9-91b944c0c2ce",
+          "id": "d3fa383e-6aee-456c-a5b9-91b944c0c2ce",
+          "createdAt": "2026-11-02T17:25:34.781Z",
+          "updatedAt": "2026-11-02T17:25:34.781Z"
+        }
+      ],
+      "createdAt": "2026-11-02T17:24:35.001Z",
+      "updatedAt": "2026-11-02T17:25:34.781Z"
     }
   ],
   "bookings": [],

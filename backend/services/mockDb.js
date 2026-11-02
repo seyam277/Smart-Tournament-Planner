@@ -1,7 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
 
-const MOCK_DB_FILE = path.join(process.cwd(), 'mock_db.json');
+const MOCK_DB_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'mock_db.json');
 
 // Helper: Generate consecutive dates array (UTC based to prevent date shifting)
 export const getConsecutiveDates = (startDateStr, durationDays = 1) => {
@@ -133,20 +135,12 @@ const loadDb = () => {
   if (!db.turfs || !Array.isArray(db.turfs) || db.turfs.length === 0) {
     db.turfs = DEFAULT_TURFS;
     fs.writeFileSync(MOCK_DB_FILE, JSON.stringify(db, null, 2), 'utf8');
-  } else {
-    // Ensure all turfs have authorityId and authorityEmail
-    let modified = false;
-    db.turfs.forEach(t => {
-      if (!t.authorityId) {
-        t.authorityId = "user1";
-        t.authorityEmail = "mahabubillaseyam00@gmail.com";
-        modified = true;
-      }
-    });
-    if (modified) {
-      fs.writeFileSync(MOCK_DB_FILE, JSON.stringify(db, null, 2), 'utf8');
-    }
   }
+  db.users = Array.isArray(db.users) ? db.users : [];
+  db.tournaments = Array.isArray(db.tournaments) ? db.tournaments : [];
+  db.teams = Array.isArray(db.teams) ? db.teams : [];
+  db.players = Array.isArray(db.players) ? db.players : [];
+  db.matches = Array.isArray(db.matches) ? db.matches : [];
   db.bookings = db.bookings || [];
   db.reviews = db.reviews || [];
   db.slots = db.slots || [];
@@ -161,19 +155,29 @@ export const mockDb = {
   // Users
   async findUserByEmail(email) {
     const db = loadDb();
-    return db.users.find(u => u.email === email);
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    const user = db.users.find(u => String(u.email || '').trim().toLowerCase() === normalizedEmail);
+    return user ? { ...user, role: user.role || 'organizer' } : undefined;
   },
   async findUserById(id) {
     const db = loadDb();
-    return db.users.find(u => u._id === id || u.id === id);
+    const user = db.users.find(u => u._id === id || u.id === id);
+    return user ? { ...user, role: user.role || 'organizer' } : undefined;
   },
   async createUser(userData) {
     const db = loadDb();
+    const normalizedEmail = String(userData.email || '').trim().toLowerCase();
+    if (db.users.some(u => String(u.email || '').trim().toLowerCase() === normalizedEmail)) {
+      const error = new Error('Email already registered.');
+      error.code = 'EMAIL_ALREADY_REGISTERED';
+      throw error;
+    }
+
     const newUser = { 
       ...userData, 
       _id: Date.now().toString(), 
       id: Date.now().toString(),
-      role: userData.role || 'organizer'
+      role: userData.role === 'authority' ? 'authority' : 'organizer'
     };
     db.users.push(newUser);
     saveDb(db);
@@ -198,7 +202,10 @@ export const mockDb = {
   },
   async updatePassword(email, newPassword) {
     const db = loadDb();
-    const userIndex = db.users.findIndex(u => u.email === email);
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    const userIndex = db.users.findIndex(
+      u => String(u.email || '').trim().toLowerCase() === normalizedEmail
+    );
     if (userIndex !== -1) {
       db.users[userIndex].password = newPassword;
       saveDb(db);
@@ -247,17 +254,158 @@ export const mockDb = {
   async findTurfsByAuthority(userId, email) {
     const db = loadDb();
     return db.turfs.filter(t => 
-      t.authorityId === userId || 
-      t.authorityEmail === email ||
-      !t.authorityId // unassigned turfs can be managed
+      !t.deletedAt && String(t.authorityId || '') === String(userId)
     );
   },
-  async createTurf(data) {
+  async findTurfByAuthority(id, userId) {
     const db = loadDb();
-    const newT = { ...data, _id: Date.now().toString(), id: Date.now().toString(), createdAt: new Date() };
+    const turf = db.turfs.find(t =>
+      (t._id === id || t.id === id) &&
+      String(t.authorityId || '') === String(userId) &&
+      !t.deletedAt
+    );
+    return turf || null;
+  },
+  async findBookableTurfField(turfId, fieldId) {
+    const db = loadDb();
+    const turf = db.turfs.find(item =>
+      (item._id === turfId || item.id === turfId) &&
+      !item.deletedAt &&
+      (!item.registrationStatus || item.registrationStatus === 'active')
+    );
+    if (!turf) return null;
+
+    const fields = Array.isArray(turf.fields) ? turf.fields : [];
+    const field = fields.find(item => item._id === fieldId || item.id === fieldId);
+    if (field) return { turf, field };
+
+    // Older public turfs were booked directly by their turf ID.
+    if (fields.length === 0 && !turf.registrationStatus &&
+        (turf._id === fieldId || turf.id === fieldId)) {
+      return { turf, field: { id: turf.id || turf._id, _id: turf._id || turf.id, name: turf.name } };
+    }
+    return null;
+  },
+  async createTurf(data, authorityId) {
+    const db = loadDb();
+    const id = uuidv4();
+    const now = new Date().toISOString();
+    const newT = {
+      ...data,
+      _id: id,
+      id,
+      authorityId: String(authorityId),
+      registrationStatus: 'pending',
+      fields: [],
+      createdAt: now,
+      updatedAt: now
+    };
     db.turfs.push(newT);
     saveDb(db);
     return newT;
+  },
+  async updateTurfByAuthority(id, authorityId, updateData) {
+    const db = loadDb();
+    const index = db.turfs.findIndex(t =>
+      (t._id === id || t.id === id) &&
+      String(t.authorityId || '') === String(authorityId) &&
+      !t.deletedAt
+    );
+    if (index === -1) return null;
+
+    db.turfs[index] = {
+      ...db.turfs[index],
+      ...updateData,
+      _id: db.turfs[index]._id || db.turfs[index].id,
+      id: db.turfs[index].id || db.turfs[index]._id,
+      authorityId: db.turfs[index].authorityId,
+      registrationStatus: db.turfs[index].registrationStatus || 'pending',
+      fields: Array.isArray(db.turfs[index].fields) ? db.turfs[index].fields : [],
+      updatedAt: new Date().toISOString()
+    };
+    saveDb(db);
+    return db.turfs[index];
+  },
+  async deleteTurfByAuthority(id, authorityId) {
+    const db = loadDb();
+    const turf = db.turfs.find(t =>
+      (t._id === id || t.id === id) &&
+      String(t.authorityId || '') === String(authorityId) &&
+      !t.deletedAt
+    );
+    if (!turf) return { turf: null, conflict: false };
+
+    const fieldIds = new Set();
+    for (const field of turf.fields || []) {
+      if (field.id) fieldIds.add(String(field.id));
+      if (field._id) fieldIds.add(String(field._id));
+    }
+    const turfIds = new Set([turf.id, turf._id].filter(Boolean).map(String));
+    const hasBookings = (db.bookings || []).some(booking =>
+      fieldIds.has(String(booking.fieldId)) || turfIds.has(String(booking.turfId))
+    );
+    if (hasBookings) return { turf, conflict: true };
+
+    turf.deletedAt = new Date().toISOString();
+    turf.registrationStatus = 'deleted';
+    turf.updatedAt = turf.deletedAt;
+    saveDb(db);
+    return { turf, conflict: false };
+  },
+  async addFieldToTurf(turfId, authorityId, fieldData) {
+    const db = loadDb();
+    const turf = db.turfs.find(t =>
+      (t._id === turfId || t.id === turfId) &&
+      String(t.authorityId || '') === String(authorityId) &&
+      !t.deletedAt
+    );
+    if (!turf) return null;
+
+    turf.fields = Array.isArray(turf.fields) ? turf.fields : [];
+    const id = uuidv4();
+    const now = new Date().toISOString();
+    const field = { ...fieldData, _id: id, id, createdAt: now, updatedAt: now };
+    turf.fields.push(field);
+    turf.updatedAt = now;
+    saveDb(db);
+    return field;
+  },
+  async updateFieldOnTurf(turfId, fieldId, authorityId, updateData) {
+    const db = loadDb();
+    const turf = db.turfs.find(t =>
+      (t._id === turfId || t.id === turfId) &&
+      String(t.authorityId || '') === String(authorityId) &&
+      !t.deletedAt
+    );
+    if (!turf) return { turf: null, field: null };
+    const field = (turf.fields || []).find(item => item._id === fieldId || item.id === fieldId);
+    if (!field) return { turf, field: null };
+    Object.assign(field, updateData, { updatedAt: new Date().toISOString() });
+    turf.updatedAt = field.updatedAt;
+    saveDb(db);
+    return { turf, field };
+  },
+  async deleteFieldFromTurf(turfId, fieldId, authorityId) {
+    const db = loadDb();
+    const turf = db.turfs.find(t =>
+      (t._id === turfId || t.id === turfId) &&
+      String(t.authorityId || '') === String(authorityId) &&
+      !t.deletedAt
+    );
+    if (!turf) return { turf: null, deleted: false, conflict: false };
+    const fieldIndex = (turf.fields || []).findIndex(item => item._id === fieldId || item.id === fieldId);
+    if (fieldIndex === -1) return { turf, deleted: false, conflict: false };
+
+    const field = turf.fields[fieldIndex];
+    const ids = new Set([field.id, field._id].filter(Boolean).map(String));
+    const hasReferences = [...(db.slots || []), ...(db.bookings || [])]
+      .some(record => ids.has(String(record.fieldId)));
+    if (hasReferences) return { turf, deleted: false, conflict: true };
+
+    turf.fields.splice(fieldIndex, 1);
+    turf.updatedAt = new Date().toISOString();
+    saveDb(db);
+    return { turf, deleted: true, conflict: false };
   },
 
   // Authority Availability & Slots Management
@@ -468,15 +616,23 @@ export const mockDb = {
       }
     }
 
-    const newB = { 
-      ...data, 
-      _id: Date.now().toString(), 
-      id: Date.now().toString(), 
+    const id = uuidv4();
+    const newB = {
+      _id: id,
+      id,
+      userId: String(data.userId),
+      turfId: String(data.turfId),
+      fieldId: String(data.fieldId),
+      tournamentId: String(data.tournamentId),
+      slotId: String(data.slotId),
+      startTime: data.startTime,
+      endTime: data.endTime,
+      date: startDate,
       startDate,
       endDate,
       duration,
       dates: bookingDates,
-      status: data.status || 'PENDING', 
+      status: 'PENDING',
       createdAt: new Date().toISOString() 
     };
 

@@ -222,6 +222,12 @@ const OrganizerRegister = () => {
               Log in instead
             </Link>
           </p>
+          <p style={{ textAlign: 'center', marginTop: '12px', color: '#94a3b8', fontSize: '14px' }}>
+            Registering a turf business?{' '}
+            <Link to="/authority/register" style={{ color: '#00ff85', textDecoration: 'none', fontWeight: '700' }}>
+              Turf Authority Registration
+            </Link>
+          </p>
         </div>
       </div>
     </div>

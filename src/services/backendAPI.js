@@ -36,6 +36,22 @@ export const authAPI = {
     });
   },
 
+  registerAuthority: async (profile) => {
+    return safeFetch(`${API_BASE_URL}/auth/authority/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profile)
+    });
+  },
+
+  loginAuthority: async (email, password) => {
+    return safeFetch(`${API_BASE_URL}/auth/authority/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+  },
+
   forgotPassword: async (email) => {
     return safeFetch(`${API_BASE_URL}/auth/forgot-password`, {
       method: 'POST',
@@ -109,7 +125,37 @@ export const tournamentAPI = {
   }
 }
 
+const authorizedJson = (token, method = 'GET', body) => ({
+  method,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`
+  },
+  ...(body === undefined ? {} : { body: JSON.stringify(body) })
+});
+
+export const turfAPI = {
+  getMyTurfs: token => safeFetch(`${API_BASE_URL}/turfs/mine`, authorizedJson(token)),
+  getMyTurf: (id, token) => safeFetch(`${API_BASE_URL}/turfs/mine/${encodeURIComponent(id)}`, authorizedJson(token)),
+  create: (data, token) => safeFetch(`${API_BASE_URL}/turfs`, authorizedJson(token, 'POST', data)),
+  update: (id, data, token) => safeFetch(`${API_BASE_URL}/turfs/mine/${encodeURIComponent(id)}`, authorizedJson(token, 'PUT', data)),
+  delete: (id, token) => safeFetch(`${API_BASE_URL}/turfs/mine/${encodeURIComponent(id)}`, authorizedJson(token, 'DELETE')),
+  addField: (turfId, data, token) => safeFetch(
+    `${API_BASE_URL}/turfs/mine/${encodeURIComponent(turfId)}/fields`,
+    authorizedJson(token, 'POST', data)
+  ),
+  updateField: (turfId, fieldId, data, token) => safeFetch(
+    `${API_BASE_URL}/turfs/mine/${encodeURIComponent(turfId)}/fields/${encodeURIComponent(fieldId)}`,
+    authorizedJson(token, 'PUT', data)
+  ),
+  deleteField: (turfId, fieldId, token) => safeFetch(
+    `${API_BASE_URL}/turfs/mine/${encodeURIComponent(turfId)}/fields/${encodeURIComponent(fieldId)}`,
+    authorizedJson(token, 'DELETE')
+  )
+};
+
 export default {
   authAPI,
-  tournamentAPI
+  tournamentAPI,
+  turfAPI
 }

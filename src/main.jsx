@@ -10,9 +10,13 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 
 import OrganizerLogin from './components/auth/OrganizerLogin'
 import OrganizerRegister from './components/auth/OrganizerRegister'
+import AuthorityLogin from './components/auth/AuthorityLogin'
+import AuthorityRegister from './components/auth/AuthorityRegister'
 import ForgotPassword from './components/auth/ForgotPassword'
+import ResetPassword from './ResetPassword'
 
 import Dashboard from './components/dashboard/Dashboard'
+import AuthorityDashboard from './components/dashboard/AuthorityDashboard'
 
 import TournamentList from './components/tournament/TournamentList'
 import TournamentCreate from './components/tournament/TournamentCreate'
@@ -24,6 +28,8 @@ import MatchManagement from './components/match/MatchManagement'
 import BudgetManagement from './components/budget/BudgetManagement'
 import TurfDetails from './components/turf/TurfDetails'
 import TurfList from './components/turf/TurfList'
+import AuthorityTurfForm from './components/turf/AuthorityTurfForm'
+import AuthorityTurfDetails from './components/turf/AuthorityTurfDetails'
 
 const App = () => {
   return (
@@ -37,8 +43,13 @@ const App = () => {
           <Route path="/login" element={<OrganizerLogin />} />
           <Route path="/register" element={<OrganizerRegister />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/organizer-login" element={<OrganizerLogin />} />
+          <Route path="/organizer-register" element={<OrganizerRegister />} />
+          <Route path="/authority/login" element={<AuthorityLogin />} />
+          <Route path="/authority/register" element={<AuthorityRegister />} />
 
-          <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute allowedRoles={['organizer']} />}>
             <Route path="/dashboard" element={<Dashboard />} />
 
             <Route path="/tournaments" element={<TournamentList />} />
@@ -52,6 +63,13 @@ const App = () => {
             <Route path="/tournaments/:id/budget" element={<BudgetManagement />} />
             <Route path="/turfs" element={<TurfList />} />
             <Route path="/turfs/:id" element={<TurfDetails />} />
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={['authority']} />}>
+            <Route path="/authority/dashboard" element={<AuthorityDashboard />} />
+            <Route path="/authority/turfs/new" element={<AuthorityTurfForm />} />
+            <Route path="/authority/turfs/:id/edit" element={<AuthorityTurfForm />} />
+            <Route path="/authority/turfs/:id" element={<AuthorityTurfDetails />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

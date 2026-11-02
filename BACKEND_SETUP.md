@@ -67,6 +67,8 @@ FILE_STORAGE_PATH=./data
 FRONTEND_URL=http://localhost:5173
 ```
 
+`JWT_SECRET` is required by the backend and must be a private, randomly generated secret held in the backend environment. Do not commit the real value or share it in logs. The backend no longer uses a source-code fallback for JWT signing.
+
 ### 4. Email Setup (Gmail)
 To enable password reset emails:
 1. Go to [Google Account Security](https://myaccount.google.com/security)
@@ -107,8 +109,10 @@ The frontend will run on `http://localhost:5173`
 ## Features Implemented
 
 ### Authentication
-- Register with email and password
-- Login with email and password
+- Separate Organizer registration and login
+- Separate Turf Authority registration and login
+- Shared user store with server-assigned `organizer` or `authority` role
+- Role-protected Organizer tournament operations
 - **Forgot Password** functionality (sends email with reset link)
 - Password reset page accessible via email link
 - JWT token-based authentication
@@ -120,16 +124,21 @@ The frontend will run on `http://localhost:5173`
 - Each tournament tracks who created it (creatorEmail)
 
 ### Data Storage
-- **File-based Storage**: Data stored in `backend/data/` directory as JSON
-- **tournaments.json**: All tournament data
-- **users.json**: All user data with hashed passwords
-- **Optional Oracle Database**: Uncomment database initialization in `server.js`
+- **Current active store**: `backend/services/mockDb.js` reads and writes `mock_db.json` relative to the backend process working directory. When started with the backend package scripts, this resolves to `backend/mock_db.json`.
+- The mock JSON store contains users, tournaments, teams, players, matches, turfs, slots, bookings, and reviews.
+- `backend/services/fileStorageService.js`, the Mongoose models, and Oracle/Mongo connection helpers are present, but the current `backend/server.js` does not initialize those alternative stores.
+- Organizer and Authority accounts use the same active user collection. Existing accounts without a role are treated as Organizers.
+- Authority-owned turf and field management uses that same JSON store. New turf records embed their independently identified `fields` array and are assigned to the authenticated Authority by the backend.
+- New turf registrations start with `registrationStatus: "pending"` and are excluded from public turf responses. No approval workflow exists in this stage. Deletion is a soft delete; turf/field records with booking or slot references are protected from deletion.
+- Turf photos are stored as validated HTTP/HTTPS URLs. Coordinates are stored as latitude/longitude values; interactive map selection and file uploads are not included.
 
 ## API Endpoints
 
 ### Authentication
 - `POST /api/auth/register` - Register new organizer
 - `POST /api/auth/login` - Login organizer
+- `POST /api/auth/authority/register` - Register Turf Authority and business contact profile
+- `POST /api/auth/authority/login` - Login Turf Authority
 - `POST /api/auth/forgot-password` - Request password reset
 - `POST /api/auth/reset-password` - Reset password with token
 
@@ -140,6 +149,20 @@ The frontend will run on `http://localhost:5173`
 - `PUT /api/tournaments/:id` - Update tournament (creator only)
 - `DELETE /api/tournaments/:id` - Delete tournament (creator only)
 - `GET /api/tournaments/my-tournaments` - Get user's tournaments
+
+### Turfs and Fields
+- `GET /api/turfs` - List public turfs (pending/deleted Authority registrations are omitted)
+- `GET /api/turfs/:id` - Get a public, active turf
+- `GET /api/turfs/mine` - List the authenticated Authority's turfs
+- `POST /api/turfs` - Create a pending turf (Authority role required; owner ID is derived from the verified token)
+- `GET /api/turfs/mine/:turfId` - Get owned turf management details
+- `PUT /api/turfs/mine/:turfId` - Update an owned turf
+- `DELETE /api/turfs/mine/:turfId` - Soft-delete an owned turf unless booking history exists
+- `POST /api/turfs/mine/:turfId/fields` - Add a field to an owned turf
+- `PUT /api/turfs/mine/:turfId/fields/:fieldId` - Update a field on an owned turf
+- `DELETE /api/turfs/mine/:turfId/fields/:fieldId` - Delete an unreferenced field on an owned turf
+
+Authority management endpoints require a bearer token with the `authority` role. Every nested turf operation checks ownership using the authenticated account ID. Public serializers do not return Authority identity or registration status.
 
 ## Frontend Components Updated
 

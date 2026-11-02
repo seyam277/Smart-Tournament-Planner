@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const TurfDetails = () => {
   const { id } = useParams();
@@ -14,8 +15,7 @@ const TurfDetails = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewError, setReviewError] = useState('');
 
-  // User state
-  const currentUser = JSON.parse(localStorage.getItem('user'));
+  const { user: currentUser, token } = useAuth();
   const [hasBooked, setHasBooked] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false);
   const [bookingId, setBookingId] = useState(null);
@@ -37,9 +37,12 @@ const TurfDetails = () => {
       setReviews(reviewData);
 
       if (currentUser) {
-        const bookingRes = await fetch(`http://localhost:3001/api/turfs/bookings/user/${currentUser._id || currentUser.id}`);
+        const bookingRes = await fetch(`http://localhost:3001/api/turfs/bookings/user/${currentUser._id || currentUser.id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!bookingRes.ok) throw new Error('Failed to fetch your booking history.');
         const userBookings = await bookingRes.json();
-        const completedBooking = userBookings.find(b => b.fieldId === id && b.status === 'Completed');
+        const completedBooking = userBookings.find(b => b.fieldId === id && String(b.status).toUpperCase() === 'COMPLETED');
         
         if (completedBooking) {
           setHasBooked(true);

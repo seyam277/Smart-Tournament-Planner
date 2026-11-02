@@ -21,7 +21,7 @@ const ForgotPassword = () => {
       if (data.error) {
         setError(data.error)
       } else {
-        setMessage('Verification successful! We have generated a reset link.')
+        setMessage(data.message || 'If the email exists, a reset link has been sent.')
         setSentEmailData({
           email: email,
           token: data.token
@@ -127,7 +127,7 @@ const ForgotPassword = () => {
               <strong style={{ color: '#00ff85' }}>{sentEmailData.email}</strong>
             </p>
 
-            <div style={{ 
+            {sentEmailData.token ? <div style={{
               background: 'rgba(15, 23, 42, 0.5)', 
               padding: '20px', 
               borderRadius: '16px', 
@@ -156,7 +156,7 @@ const ForgotPassword = () => {
               >
                 RESET PASSWORD NOW
               </Link>
-            </div>
+            </div> : <p style={{ color: '#94a3b8' }}>If an account exists for this address, follow the password reset link sent to its inbox.</p>}
             
             <button 
               onClick={() => setSentEmailData(null)}

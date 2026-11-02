@@ -1,171 +1,173 @@
-import { v4 as uuidv4 } from 'uuid'
 import { hashPassword, comparePassword } from '../utils/passwordUtils.js'
 import { generateToken, generatePasswordResetToken, verifyToken } from '../utils/jwtUtils.js'
+import config from '../config/config.js'
 import User from '../models/User.js'
 import { sendPasswordResetEmail } from '../services/emailService.js'
 import mongoose from 'mongoose'
 import { mockDb } from '../services/mockDb.js'
 
-// Helper to check if DB is connected
 const isDbConnected = () => mongoose.connection.readyState === 1
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const findMongooseUserByEmail = email => {
+  const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return User.findOne({ email: { $regex: `^${escapedEmail}$`, $options: 'i' } })
+}
 
-// Register new organizer
-export const register = async (req, res) => {
+const publicUser = (user, role) => {
+  const profile = {
+    id: String(user._id || user.id),
+    name: user.name,
+    email: user.email,
+    phone: user.phone || '',
+    role
+  }
+
+  if (role === 'authority') {
+    profile.authorityProfile = user.authorityProfile || {}
+  }
+
+  return profile
+}
+
+const normalizeRole = role => role === 'authority' ? 'authority' : 'organizer'
+
+const registerWithRole = async (req, res, role) => {
   try {
-    const { name, email, password, phone } = req.body
-
-    // Validate input
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Missing required fields' })
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' })
-    }
-
-    // Fallback to Mock DB if no connection
-    if (!isDbConnected()) {
-      console.log('[Auth] Using Mock DB for registration')
-      const existingUser = await mockDb.findUserByEmail(email)
-      if (existingUser) return res.status(400).json({ error: 'Email already registered' })
-      
-      const hashedPassword = await hashPassword(password)
-      const user = await mockDb.createUser({ name, email, password: hashedPassword, phone })
-      const token = generateToken(user.id, user.email)
-      return res.status(201).json({ 
-        message: 'User registered (Mock Mode)', 
-        token, 
-        organizer: { id: user.id, name: user.name, email: user.email } 
-      })
-    }
-
-    // Check if email already exists
-    const existingUser = await User.findOne({ email })
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email already registered' })
-    }
-
-    // Hash password
-    const hashedPassword = await hashPassword(password)
-
-    // Create new user
-    const newUser = await User.create({
+    const {
       name,
       email,
-      password: hashedPassword,
-      phone: phone || ''
-    })
+      password,
+      phone,
+      businessName,
+      businessContactNumber,
+      businessAddress,
+      preferredContact
+    } = req.body
+    const normalizedEmail = String(email || '').trim().toLowerCase()
 
-    // Generate token
-    const token = generateToken(newUser._id, newUser.email)
+    if (!String(name || '').trim() || !normalizedEmail || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required.' })
+    }
+    if (!emailRegex.test(normalizedEmail)) {
+      return res.status(400).json({ error: 'Invalid email format.' })
+    }
+    if (typeof password !== 'string' || password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters.' })
+    }
+    if (role === 'authority' && (
+      !String(phone || '').trim() ||
+      !String(businessName || '').trim() ||
+      !String(businessContactNumber || '').trim() ||
+      !String(businessAddress || '').trim() ||
+      !String(preferredContact || '').trim()
+    )) {
+      return res.status(400).json({ error: 'All Authority profile fields are required.' })
+    }
 
-    res.status(201).json({
-      message: 'Organizer registered successfully',
+    const existingUser = isDbConnected()
+      ? await findMongooseUserByEmail(normalizedEmail)
+      : await mockDb.findUserByEmail(normalizedEmail)
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already registered.' })
+    }
+
+    const userData = {
+      name: String(name).trim(),
+      email: normalizedEmail,
+      password: await hashPassword(password),
+      phone: String(phone || '').trim(),
+      role,
+      ...(role === 'authority' ? {
+        authorityProfile: {
+          businessName: String(businessName).trim(),
+          businessContactNumber: String(businessContactNumber).trim(),
+          businessAddress: String(businessAddress).trim(),
+          preferredContact: String(preferredContact).trim()
+        }
+      } : {})
+    }
+
+    const user = isDbConnected()
+      ? await User.create(userData)
+      : await mockDb.createUser(userData)
+    const profile = publicUser(user, role)
+    const token = generateToken(profile.id, profile.email, role)
+
+    return res.status(201).json({
+      message: role === 'authority' ? 'Turf Authority registered successfully.' : 'Organizer registered successfully.',
       token,
-      organizer: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        phone: newUser.phone
-      }
+      ...(role === 'authority' ? { authority: profile } : { organizer: profile })
     })
   } catch (error) {
-    console.error('Register error:', error)
-    res.status(500).json({ error: 'Registration failed' })
+    if (error.code === 'EMAIL_ALREADY_REGISTERED' || error.code === 11000) {
+      return res.status(409).json({ error: 'Email already registered.' })
+    }
+    console.error('Registration error:', error.message)
+    return res.status(500).json({ error: 'Registration failed.' })
   }
 }
 
-// Login organizer
-export const login = async (req, res) => {
+const loginWithRole = async (req, res, role) => {
   try {
-    const { email, password } = req.body
+    const normalizedEmail = String(req.body.email || '').trim().toLowerCase()
+    const { password } = req.body
 
-    // Validate input
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' })
+    if (!normalizedEmail || !password) {
+      return res.status(400).json({ error: 'Email and password are required.' })
     }
 
-    // Fallback to Mock DB
-    if (!isDbConnected()) {
-      console.log('[Auth] Using Mock DB for login')
-      const user = await mockDb.findUserByEmail(email)
-      if (!user) return res.status(401).json({ error: 'Invalid email or password' })
-      
-      const isMatch = await comparePassword(password, user.password)
-      if (!isMatch) return res.status(401).json({ error: 'Invalid email or password' })
-      
-      const token = generateToken(user.id, user.email)
-      return res.json({ 
-        message: 'Login successful (Mock Mode)',
-        token, 
-        organizer: { id: user.id, name: user.name, email: user.email } 
-      })
+    const user = isDbConnected()
+      ? await findMongooseUserByEmail(normalizedEmail)
+      : await mockDb.findUserByEmail(normalizedEmail)
+
+    if (!user || !(await comparePassword(password, user.password))) {
+      return res.status(401).json({ error: 'Invalid email or password.' })
     }
 
-    // Find user by email
-    const user = await User.findOne({ email })
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' })
+    const actualRole = normalizeRole(user.role)
+    if (actualRole !== role) {
+      return res.status(403).json({ error: `This account cannot sign in as ${role === 'authority' ? 'a Turf Authority' : 'an Organizer'}.` })
     }
 
-    // Compare password
-    const isPasswordValid = await comparePassword(password, user.password)
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Invalid email or password' })
-    }
-
-    // Generate token
-    const token = generateToken(user._id, user.email)
-
-    res.json({
-      message: 'Login successful',
+    const profile = publicUser(user, actualRole)
+    const token = generateToken(profile.id, profile.email, actualRole)
+    return res.json({
+      message: 'Login successful.',
       token,
-      organizer: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone
-      }
+      ...(actualRole === 'authority' ? { authority: profile } : { organizer: profile })
     })
   } catch (error) {
-    console.error('Login error:', error)
-    res.status(500).json({ error: 'Login failed' })
+    console.error('Login error:', error.message)
+    return res.status(500).json({ error: 'Login failed.' })
   }
 }
 
-// Request password reset
+export const register = (req, res) => registerWithRole(req, res, 'organizer')
+export const registerAuthority = (req, res) => registerWithRole(req, res, 'authority')
+export const login = (req, res) => loginWithRole(req, res, 'organizer')
+export const loginAuthority = (req, res) => loginWithRole(req, res, 'authority')
+
 export const requestPasswordReset = async (req, res) => {
   try {
-    const { email } = req.body
+    const email = String(req.body.email || '').trim().toLowerCase()
+    if (!email) return res.status(400).json({ error: 'Email is required.' })
 
-    if (!email) {
-      return res.status(400).json({ error: 'Email is required' })
-    }
-
-    // Mock mode for reset
     if (!isDbConnected()) {
       const user = await mockDb.findUserByEmail(email)
-      if (!user) {
-        return res.status(404).json({ error: 'Email not found' })
-      }
-      
-      const resetToken = generatePasswordResetToken(user.id, user.email)
-      // Call email service to log it to console
-      await sendPasswordResetEmail(email, resetToken, user.name)
-      
-      return res.json({ 
-        message: 'Mock Mode: Reset link generated',
-        token: resetToken // Return token for the interactive frontend preview
+      if (!user) return res.json({ message: 'If the email exists, a reset link has been sent.' })
+
+      const resetToken = generatePasswordResetToken(user.id || user._id, user.email)
+      const emailSent = await sendPasswordResetEmail(email, resetToken, user.name)
+      if (!emailSent) return res.status(500).json({ error: 'Failed to send reset email.' })
+      return res.json({
+        message: 'Password reset email sent successfully.',
+        ...(config.NODE_ENV === 'development' ? { token: resetToken } : {})
       })
     }
 
-    // Find user by email
-    const user = await User.findOne({ email })
-    if (!user) {
-      return res.json({ message: 'If the email exists, a reset link has been sent' })
-    }
+    const user = await findMongooseUserByEmail(email)
+    if (!user) return res.json({ message: 'If the email exists, a reset link has been sent.' })
 
     const resetToken = generatePasswordResetToken(user._id, user.email)
     user.resetPasswordToken = resetToken
@@ -173,58 +175,58 @@ export const requestPasswordReset = async (req, res) => {
     await user.save()
 
     const emailSent = await sendPasswordResetEmail(email, resetToken, user.name)
-    if (!emailSent) return res.status(500).json({ error: 'Failed to send reset email' })
-
-    res.json({ message: 'Password reset email sent successfully' })
+    if (!emailSent) return res.status(500).json({ error: 'Failed to send reset email.' })
+    return res.json({ message: 'Password reset email sent successfully.' })
   } catch (error) {
-    console.error('Password reset error:', error)
-    res.status(500).json({ error: 'Failed to process password reset' })
+    console.error('Password reset error:', error.message)
+    return res.status(500).json({ error: 'Failed to process password reset.' })
   }
 }
 
-// Reset password with token
 export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body
-
     if (!token || !newPassword) {
-      return res.status(400).json({ error: 'Token and new password required' })
+      return res.status(400).json({ error: 'Token and new password are required.' })
+    }
+    if (typeof newPassword !== 'string' || newPassword.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters.' })
     }
 
-    // Verify token
     const decoded = verifyToken(token)
     if (!decoded || decoded.type !== 'password-reset') {
-      return res.status(401).json({ error: 'Invalid or expired reset token' })
+      return res.status(401).json({ error: 'Invalid or expired reset token.' })
     }
 
-    // Fallback for Mock Mode
+    const hashedPassword = await hashPassword(newPassword)
     if (!isDbConnected()) {
-      console.log('[Auth] Using Mock DB for password reset')
-      const hashedPassword = await hashPassword(newPassword)
       const success = await mockDb.updatePassword(decoded.email, hashedPassword)
-      if (!success) return res.status(404).json({ error: 'User not found in Mock DB' })
-      return res.json({ message: 'Password reset successfully (Mock Mode)' })
+      if (!success) return res.status(404).json({ error: 'User not found.' })
+      return res.json({ message: 'Password reset successfully.' })
     }
 
     const user = await User.findById(decoded.organizerId)
-    if (!user) return res.status(404).json({ error: 'User not found' })
+    if (!user || !user.resetPasswordToken || user.resetPasswordToken !== token ||
+        !user.resetPasswordExpires || user.resetPasswordExpires.getTime() < Date.now()) {
+      return res.status(401).json({ error: 'Invalid or expired reset token.' })
+    }
 
-    const hashedPassword = await hashPassword(newPassword)
     user.password = hashedPassword
     user.resetPasswordToken = undefined
     user.resetPasswordExpires = undefined
     await user.save()
-
-    res.json({ message: 'Password reset successfully' })
+    return res.json({ message: 'Password reset successfully.' })
   } catch (error) {
-    console.error('Reset password error:', error)
-    res.status(500).json({ error: 'Failed to reset password' })
+    console.error('Reset password error:', error.message)
+    return res.status(500).json({ error: 'Failed to reset password.' })
   }
 }
 
 export default {
   register,
+  registerAuthority,
   login,
+  loginAuthority,
   requestPasswordReset,
   resetPassword
 }

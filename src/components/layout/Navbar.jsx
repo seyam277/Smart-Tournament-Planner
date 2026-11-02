@@ -8,8 +8,13 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [matches, setMatches] = useState([]);
+  const isOrganizer = !user || (user.role || 'organizer') === 'organizer';
 
   useEffect(() => {
+    if (!user || (user.role || 'organizer') !== 'organizer') {
+      return;
+    }
+
     const fetchMatches = async () => {
       try {
         const tournaments = await dataService.getTournaments();
@@ -39,15 +44,19 @@ const Navbar = () => {
       }
     };
     fetchMatches();
-  }, []);
+  }, [user]);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate(user?.role === 'authority' ? '/authority/login' : '/login');
   };
 
   // Hide Navbar on Login, Registration, Reset, and Forgot Password pages
-  const authPages = ['/login', '/register', '/forgot-password', '/reset-password', '/organizer-login', '/organizer-register'];
+  const authPages = [
+    '/login', '/register', '/forgot-password', '/reset-password',
+    '/organizer-login', '/organizer-register',
+    '/authority/login', '/authority/register'
+  ];
   if (authPages.includes(location.pathname)) {
     return null;
   }
@@ -56,14 +65,25 @@ const Navbar = () => {
     <nav className="navbar" style={{ background: '#0f172a', borderBottom: '1px solid #334155', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
       <div className="container">
         <div className="navbar-top">
-          <Link to="/dashboard" className="navbar-logo" style={{ textTransform: 'lowercase', color: '#00ff85', textShadow: '0 0 10px rgba(0, 255, 133, 0.5)' }}>
+          <Link to={user?.role === 'authority' ? '/authority/dashboard' : '/dashboard'} className="navbar-logo" style={{ textTransform: 'lowercase', color: '#00ff85', textShadow: '0 0 10px rgba(0, 255, 133, 0.5)' }}>
             tournament hobe
           </Link>
           
           <ul className="navbar-links">
-            <li><Link to="/dashboard" style={{ color: '#f8fafc' }}>Dashboard</Link></li>
-            <li><Link to="/tournaments" style={{ color: '#f8fafc' }}>Tournaments</Link></li>
-            <li><Link to="/tournaments/create" style={{ color: '#f8fafc' }}>Create Tournament</Link></li>
+            {user?.role === 'authority' ? (
+              <>
+                <li><Link to="/authority/dashboard" style={{ color: '#f8fafc' }}>Authority Dashboard</Link></li>
+                <li><Link to="/authority/turfs/new" style={{ color: '#f8fafc' }}>Add Turf</Link></li>
+              </>
+            ) : isOrganizer && user ? (
+              <>
+                <li><Link to="/dashboard" style={{ color: '#f8fafc' }}>Dashboard</Link></li>
+                <li><Link to="/tournaments" style={{ color: '#f8fafc' }}>Tournaments</Link></li>
+                <li><Link to="/tournaments/create" style={{ color: '#f8fafc' }}>Create Tournament</Link></li>
+              </>
+            ) : (
+              <li><Link to="/login" style={{ color: '#f8fafc' }}>Organizer Login</Link></li>
+            )}
             {user ? (
               <>
                 <li style={{ color: '#94a3b8', display: 'flex', alignItems: 'center', fontSize: '14px', fontWeight: '600' }}>
@@ -87,7 +107,7 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
-      <div className="navbar-sub" style={{ background: '#1e293b', borderBottom: '1px solid #334155' }}>
+      {(!user || user.role === 'organizer') && <div className="navbar-sub" style={{ background: '#1e293b', borderBottom: '1px solid #334155' }}>
         <div className="container">
           <div style={{ display: 'flex', gap: '20px', overflowX: 'auto', whiteSpace: 'nowrap', padding: '10px 0' }}>
             <span style={{ fontWeight: 'bold', color: '#00ff85' }}>LIVE MATCHES</span>
@@ -100,11 +120,10 @@ const Navbar = () => {
             )}
           </div>
         </div>
-      </div>
+      </div>}
     </nav>
 
   );
 };
 
 export default Navbar;
-

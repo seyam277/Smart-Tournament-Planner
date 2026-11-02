@@ -1,9 +1,13 @@
 import jwt from 'jsonwebtoken'
 import config from '../config/config.js'
 
-export const generateToken = (organizerId, email) => {
+export const generateToken = (organizerId, email, role = 'organizer') => {
+  if (!['organizer', 'authority'].includes(role)) {
+    throw new Error('Cannot create an access token for an unsupported role.')
+  }
+
   return jwt.sign(
-    { organizerId, email },
+    { organizerId, email, role },
     config.JWT_SECRET,
     { expiresIn: config.JWT_EXPIRY }
   )
@@ -19,10 +23,8 @@ export const generatePasswordResetToken = (organizerId, email) => {
 
 export const verifyToken = (token) => {
   try {
-    console.log('[JWT] Verifying token with secret:', config.JWT_SECRET.substring(0, 5) + '...')
     return jwt.verify(token, config.JWT_SECRET)
   } catch (err) {
-    console.error('[JWT] Verification failed:', err.message)
     return null
   }
 }

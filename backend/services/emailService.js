@@ -38,13 +38,8 @@ export const sendPasswordResetEmail = async (email, resetToken, organizerName) =
     }
     await transporter.sendMail(mailOptions)
     return true
-  } catch (err) {
-    console.warn('--- PASSWORD RESET MOCK LOG ---')
-    console.warn(`Target Email: ${email}`)
-    console.warn(`Reset Link: ${resetLink}`)
-    console.warn('-------------------------------')
-    console.error('Email sending failed (SMTP not configured or invalid):', err.message)
-    // Return true anyway so the frontend shows success, and we can test via console
+  } catch {
+    console.warn('Password reset email was not delivered; SMTP may be unconfigured or unavailable.')
     return true 
   }
 }

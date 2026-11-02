@@ -7,7 +7,7 @@ const TournamentCreate = () => {
   const { id } = useParams()
   const isEdit = !!id
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
     name: '',
@@ -192,6 +192,7 @@ const TournamentCreate = () => {
       return
     }
     try {
+      let bookingFailed = false
       if (isEdit) {
         await dataService.updateTournament(id, formData)
       } else {
@@ -202,28 +203,41 @@ const TournamentCreate = () => {
           status: 'Active',
           createdAt: new Date().toISOString()
         }
-        const newTournament = await dataService.createTournament(tournamentData)
+        const tournamentResponse = await dataService.createTournament(tournamentData)
+        const newTournament = tournamentResponse.tournament || tournamentResponse
         
         // Handle booking if turf and slot were selected
         if (formData.turfId && formData.slotId) {
           try {
-            await fetch('http://localhost:3001/api/turfs/bookings', {
+            const selectedSlot = slots.find(slot => (slot.id || slot._id) === formData.slotId)
+            const bookingResponse = await fetch('http://localhost:3001/api/turfs/bookings', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+              },
               body: JSON.stringify({
                 tournamentId: newTournament._id || newTournament.id,
+                turfId: formData.turfId,
                 fieldId: formData.turfId,
                 slotId: formData.slotId,
                 date: formData.startDate,
-                userId: user?.id || user?._id
+                startTime: selectedSlot?.startTime,
+                endTime: selectedSlot?.endTime
               })
             })
+            if (!bookingResponse.ok) {
+              const bookingError = await bookingResponse.json().catch(() => ({}))
+              throw new Error(bookingError.error || 'Failed to reserve the selected turf slot.')
+            }
           } catch (e) {
-            console.error('Failed to create booking', e)
+            bookingFailed = true
+            setBookingStatus('failed')
+            setError(`Tournament was created, but the turf booking failed: ${e.message || 'Unknown error.'}`)
           }
         }
       }
-      navigate('/dashboard')
+      if (!bookingFailed) navigate('/dashboard')
     } catch (err) {
       setError(`Failed to ${isEdit ? 'update' : 'publish'} tournament: ` + err.message)
     }
@@ -515,7 +529,7 @@ const TournamentCreate = () => {
                     <div style={{ fontSize: '13px', color: '#94a3b8' }}>TURF: <span style={{ color: '#00ff85', fontWeight: 'bold' }}>{turfs.find(t => (t._id || t.id) === formData.turfId)?.name || '-'}</span></div>
                     <div style={{ fontSize: '13px', color: '#94a3b8' }}>DATE: <span style={{ color: '#00ff85', fontWeight: 'bold' }}>{formData.startDate}</span></div>
                     <div style={{ fontSize: '13px', color: '#94a3b8' }}>SLOT: <span style={{ color: '#00ff85', fontWeight: 'bold' }}>{slots.find(s => s.id === formData.slotId)?.startTime} – {slots.find(s => s.id === formData.slotId)?.endTime}</span></div>
-                    <div style={{ fontSize: '13px', color: '#94a3b8' }}>BOOKING STATUS: <span style={{ color: '#facc15', fontWeight: 'bold' }}>PENDING</span></div>
+                    <div style={{ fontSize: '13px', color: '#94a3b8' }}>BOOKING STATUS: <span style={{ color: bookingStatus === 'failed' ? '#ff4d4d' : '#facc15', fontWeight: 'bold' }}>{bookingStatus === 'failed' ? 'FAILED - TOURNAMENT CREATED' : 'PENDING'}</span></div>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <div style={{ fontSize: '13px', color: '#94a3b8' }}>TEAMS: <span style={{ color: '#00ff85', fontWeight: 'bold' }}>{formData.teams.length}</span></div>
@@ -610,9 +624,10 @@ const TournamentCreate = () => {
               <button 
                 type="button" 
                 onClick={handleSubmit} 
+                disabled={bookingStatus === 'failed'}
                 style={{ padding: '15px 50px', borderRadius: '16px', background: 'linear-gradient(135deg, #00ff85, #38bdf8)', border: 'none', color: '#0f172a', fontWeight: '900', boxShadow: '0 10px 20px rgba(0, 255, 133, 0.3)' }}
               >
-                {isEdit ? 'UPDATE TOURNAMENT' : 'LAUNCH TOURNAMENT'}
+                {bookingStatus === 'failed' ? 'TOURNAMENT CREATED' : isEdit ? 'UPDATE TOURNAMENT' : 'LAUNCH TOURNAMENT'}
               </button>
             )}
           </div>

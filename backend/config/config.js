@@ -7,6 +7,10 @@ const __dirname = path.dirname(__filename)
 
 dotenv.config({ path: path.join(__dirname, '../.env') })
 
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET must be configured in the backend environment.')
+}
+
 const config = {
   // Server
   PORT: process.env.PORT || 3001,
@@ -20,7 +24,7 @@ const config = {
   },
   
   // JWT
-  JWT_SECRET: 'tournament_hobe_secure_secret_key_2026',
+  JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRY: '7d',
   
   // Email
