@@ -106,7 +106,7 @@ const AuthorityRegister = () => {
           </button>
         </form>
         <p style={{ textAlign: 'center', color: '#94a3b8', marginBottom: 0 }}>
-          Already registered? <Link to="/authority/login" style={{ color: '#00ff85' }}>Authority Login</Link>
+          Already registered? <Link to="/authority/login" style={{ color: '#00ff85' }}>Venue Login</Link>
         </p>
         <p style={{ textAlign: 'center', color: '#94a3b8' }}>
           Organizer? <Link to="/register" style={{ color: '#00ff85' }}>Organizer Registration</Link>

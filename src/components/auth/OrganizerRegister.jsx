@@ -95,7 +95,7 @@ const OrganizerRegister = () => {
     }}>
       <div style={{ width: '100%', maxWidth: '500px' }}>
         <h1 style={{ textAlign: 'center', color: '#00ff85', marginBottom: '30px', fontWeight: '900', fontSize: '32px' }}>
-          Tournament Hobe
+          Smart Tournament Planner
         </h1>
         
         <div style={{ 
@@ -107,7 +107,7 @@ const OrganizerRegister = () => {
           boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.5)'
         }}>
 
-          <h2 style={{ textAlign: 'center', color: 'white', marginBottom: '30px', fontSize: '24px' }}>Initialize Account</h2>
+          <h2 style={{ textAlign: 'center', color: 'white', marginBottom: '30px', fontSize: '24px' }}>Create Organizer Account</h2>
 
           {error && (
             <div style={{

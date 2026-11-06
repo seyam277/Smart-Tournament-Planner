@@ -1,246 +1,133 @@
-# Backend Setup & Installation Guide
+# Backend Setup
 
-## Project Structure
-```
-tournament-hobe/
-├── backend/               # Backend API server
-│   ├── config/
-│   │   ├── config.js      # Configuration (database, JWT, email)
-│   │   └── database.js    # Oracle Database connection
-│   ├── controllers/       # Request handlers
-│   ├── middleware/        # Authentication & error handling
-│   ├── routes/            # API routes
-│   ├── services/          # Email & file storage services
-│   ├── utils/             # Utility functions (JWT, password)
-│   ├── data/              # File-based data storage
-│   ├── .env               # Environment variables
-│   ├── package.json
-│   └── server.js          # Main server file
-└── src/                   # Frontend React application
-```
+The backend is an Express API in `backend/`. Run commands in that directory unless otherwise noted.
 
-## Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
-- Oracle Database (optional, can use file storage instead)
-- Gmail account (for password reset emails)
+## Requirements
 
-## Backend Setup
+- Node.js compatible with the installed dependencies
+- npm
 
-### 1. Navigate to Backend Directory
+## Install and start
+
+From the project directory:
+
 ```bash
-cd tournament-hobe/backend
+cd backend
+npm install
+npm run dev
 ```
 
-### 2. Install Dependencies
+Use `npm start` to run without nodemon. The API listens on port `3001` unless `PORT` is set. Check that it is available with `GET http://localhost:3001/api/health`.
+
+The frontend is a separate Vite application. In another terminal, return to the project directory and run:
+
 ```bash
 npm install
+npm run dev
 ```
 
-### 3. Configure Environment Variables
-Edit the `.env` file in the backend directory:
+The frontend normally runs at `http://localhost:5173`.
+
+## Environment
+
+The backend loads `backend/.env`. At minimum, configure a private JWT signing secret:
 
 ```env
-# Server
 PORT=3001
-NODE_ENV=development
-
-# Oracle Database Configuration
-ORACLE_USER=your_username
-ORACLE_PASSWORD=your_password
-ORACLE_CONNECT_STRING=localhost:1521/xe
-
-# JWT Configuration
-JWT_SECRET=your_secret_key_here
-JWT_EXPIRY=7d
-
-# Email Configuration (Gmail)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASSWORD=your_app_password
-
-# File Storage Path
-FILE_STORAGE_PATH=./data
-
-# Frontend URL
+JWT_SECRET=replace_with_a_private_random_secret
 FRONTEND_URL=http://localhost:5173
 ```
 
-`JWT_SECRET` is required by the backend and must be a private, randomly generated secret held in the backend environment. Do not commit the real value or share it in logs. The backend no longer uses a source-code fallback for JWT signing.
+Optional SMTP settings allow password-reset messages to be sent through a configured mail server:
 
-### 4. Email Setup (Gmail)
-To enable password reset emails:
-1. Go to [Google Account Security](https://myaccount.google.com/security)
-2. Enable "2-Step Verification"
-3. Create an "App Password" for Gmail
-4. Use the App Password in the `.env` file as EMAIL_PASSWORD
-
-### 5. Start the Backend Server
-```bash
-npm start
-```
-Or with auto-reload:
-```bash
-npm run dev
+```env
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@example.com
+EMAIL_PASSWORD=your_smtp_or_app_password
 ```
 
-The backend will run on `http://localhost:3001`
+The backend requires `JWT_SECRET` and fails during startup if it is missing. Keep real secrets in the local environment; do not commit `.env` or paste secret values into logs or documentation.
 
-## Frontend Setup
+`ORACLE_USER`, `ORACLE_PASSWORD`, and `ORACLE_CONNECT_STRING` are read by the retained Oracle configuration helper. The current server does not initialize an Oracle connection.
 
-### 1. Navigate to Frontend Directory
-```bash
-cd tournament-hobe
-```
+## Active data storage
 
-### 2. Install Dependencies
-```bash
-npm install
-```
+`backend/services/mockDb.js` is the active data service. It resolves `backend/mock_db.json` relative to the module file and reads/writes that JSON file. It stores users, tournaments, teams, players, matches, turfs, fields, slots, bookings, and reviews.
 
-### 3. Start the Frontend
-```bash
-npm run dev
-```
+Back up the active JSON file before changing or resetting data. It may contain user records and password hashes and should be handled as private application data.
 
-The frontend will run on `http://localhost:5173`
+The repository also retains alternate storage components:
 
-## Features Implemented
+- `backend/config/database.js` and the `oracledb` dependency provide an Oracle connection helper.
+- `backend/config/db.js` and the Mongoose models provide a MongoDB connection/schema path.
+- `backend/services/fileStorageService.js` and `backend/data/` provide a separate file-storage implementation.
 
-### Authentication
-- Separate Organizer registration and login
-- Separate Turf Authority registration and login
-- Shared user store with server-assigned `organizer` or `authority` role
-- Role-protected Organizer tournament operations
-- **Forgot Password** functionality (sends email with reset link)
-- Password reset page accessible via email link
-- JWT token-based authentication
+These are not initialized by `backend/server.js`; the current runtime uses the JSON mock store. They are documented here for clarity and are not removed or disabled by this setup guide.
 
-### Tournament Access Control
-- **Tournament Creator Only**: Can edit and delete their own tournaments
-- **Other Organizers**: Can view the tournament but not edit
-- **Unauthenticated Users**: Can view tournaments but not create/edit
-- Each tournament tracks who created it (creatorEmail)
+## API routes
 
-### Data Storage
-- **Current active store**: `backend/services/mockDb.js` reads and writes `mock_db.json` relative to the backend process working directory. When started with the backend package scripts, this resolves to `backend/mock_db.json`.
-- The mock JSON store contains users, tournaments, teams, players, matches, turfs, slots, bookings, and reviews.
-- `backend/services/fileStorageService.js`, the Mongoose models, and Oracle/Mongo connection helpers are present, but the current `backend/server.js` does not initialize those alternative stores.
-- Organizer and Authority accounts use the same active user collection. Existing accounts without a role are treated as Organizers.
-- Authority-owned turf and field management uses that same JSON store. New turf records embed their independently identified `fields` array and are assigned to the authenticated Authority by the backend.
-- New turf registrations start with `registrationStatus: "pending"` and are excluded from public turf responses. No approval workflow exists in this stage. Deletion is a soft delete; turf/field records with booking or slot references are protected from deletion.
-- Turf photos are stored as validated HTTP/HTTPS URLs. Coordinates are stored as latitude/longitude values; interactive map selection and file uploads are not included.
+### Health and authentication
 
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register new organizer
-- `POST /api/auth/login` - Login organizer
-- `POST /api/auth/authority/register` - Register Turf Authority and business contact profile
-- `POST /api/auth/authority/login` - Login Turf Authority
-- `POST /api/auth/forgot-password` - Request password reset
-- `POST /api/auth/reset-password` - Reset password with token
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/health` | Health check |
+| `POST` | `/api/auth/register` | Register an Organizer |
+| `POST` | `/api/auth/login` | Log in an Organizer |
+| `POST` | `/api/auth/authority/register` | Register a venue authority |
+| `POST` | `/api/auth/authority/login` | Log in a venue authority |
+| `POST` | `/api/auth/forgot-password` | Request password reset |
+| `POST` | `/api/auth/reset-password` | Reset password with token |
 
 ### Tournaments
-- `GET /api/tournaments/all` - Get all tournaments (public)
-- `GET /api/tournaments/:id` - Get specific tournament
-- `POST /api/tournaments` - Create tournament (requires auth)
-- `PUT /api/tournaments/:id` - Update tournament (creator only)
-- `DELETE /api/tournaments/:id` - Delete tournament (creator only)
-- `GET /api/tournaments/my-tournaments` - Get user's tournaments
 
-### Turfs and Fields
-- `GET /api/turfs` - List public turfs (pending/deleted Authority registrations are omitted)
-- `GET /api/turfs/:id` - Get a public, active turf
-- `GET /api/turfs/mine` - List the authenticated Authority's turfs
-- `POST /api/turfs` - Create a pending turf (Authority role required; owner ID is derived from the verified token)
-- `GET /api/turfs/mine/:turfId` - Get owned turf management details
-- `PUT /api/turfs/mine/:turfId` - Update an owned turf
-- `DELETE /api/turfs/mine/:turfId` - Soft-delete an owned turf unless booking history exists
-- `POST /api/turfs/mine/:turfId/fields` - Add a field to an owned turf
-- `PUT /api/turfs/mine/:turfId/fields/:fieldId` - Update a field on an owned turf
-- `DELETE /api/turfs/mine/:turfId/fields/:fieldId` - Delete an unreferenced field on an owned turf
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/tournaments/all` | List tournaments |
+| `GET` | `/api/tournaments/:id` | Read a tournament |
+| `GET` | `/api/tournaments/my-tournaments` | List the signed-in Organizer's tournaments |
+| `POST` | `/api/tournaments` | Create a tournament (Organizer) |
+| `PUT` | `/api/tournaments/:id` | Update a tournament (Organizer/owner checks apply) |
+| `DELETE` | `/api/tournaments/:id` | Delete a tournament (Organizer/owner checks apply) |
 
-Authority management endpoints require a bearer token with the `authority` role. Every nested turf operation checks ownership using the authenticated account ID. Public serializers do not return Authority identity or registration status.
+### Turf and field management
 
-## Frontend Components Updated
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/turfs` | List public turfs |
+| `GET` | `/api/turfs/:id` | Read a public turf |
+| `GET` | `/api/turfs/:fieldId/slots?date=YYYY-MM-DD` | Read field slots |
+| `GET` | `/api/turfs/:fieldId/reviews` | Read field reviews |
+| `POST` | `/api/turfs/:fieldId/reviews` | Create a field review |
+| `GET` | `/api/turfs/mine` | List the signed-in authority's turfs |
+| `POST` | `/api/turfs` | Create a turf (authority) |
+| `GET` | `/api/turfs/mine/:turfId` | Read an owned turf |
+| `PUT` | `/api/turfs/mine/:turfId` | Update an owned turf |
+| `DELETE` | `/api/turfs/mine/:turfId` | Soft-delete an owned turf |
+| `POST` | `/api/turfs/mine/:turfId/fields` | Add a field |
+| `PUT` | `/api/turfs/mine/:turfId/fields/:fieldId` | Update a field |
+| `DELETE` | `/api/turfs/mine/:turfId/fields/:fieldId` | Delete an unreferenced field |
+| `POST` | `/api/turfs/bookings` | Create a booking (Organizer) |
+| `GET` | `/api/turfs/bookings/user/:userId` | List an Organizer's bookings |
 
-- `Login.jsx` - Login with forgot password option
-- `Register.jsx` - Registration with backend integration
-- `ResetPassword.jsx` - Password reset page
-- `TournamentListBackend.jsx` - View all tournaments with permissions
-- `TournamentCreateBackend.jsx` - Create new tournament
+Authority management endpoints require a bearer token with the `authority` role and check ownership of the nested turf. Organizer-only routes require the `organizer` role. Pending/deleted turf records are omitted from public listings; deletion may be blocked when booking or slot references exist.
 
-## Testing the System
+## Manual smoke checks
 
-### 1. Register
-- Go to `/register`
-- Fill in details and submit
-- Backend validates and creates account
+1. Start the backend and request `GET /api/health`.
+2. Register and log in using the Organizer routes.
+3. Register and log in using the authority routes; verify the roles remain separate.
+4. With an Organizer account, create a tournament and read it from the tournament list/detail routes.
+5. With an authority account, register a turf and add/edit a field.
 
-### 2. Login
-- Go to `/login`
-- Enter credentials
-- Receive JWT token
-
-### 3. Forgot Password
-- Click "Forgot Password?" on login page
-- Enter email
-- Check email for reset link
-- Click link to reset password
-
-### 4. Create Tournament
-- After login, go to `/tournaments/create`
-- Fill in tournament details
-- Only you can edit this tournament
-
-### 5. View Tournaments
-- Go to `/tournaments`
-- View all tournaments
-- Other tournaments show "Created by: email@example.com"
-- Only your tournaments have Edit/Delete buttons
-
-## Database Setup (Oracle)
-
-To enable Oracle Database:
-
-1. Install Oracle client on your machine
-2. Update connection string in `.env`:
-   ```
-   ORACLE_CONNECT_STRING=yourdomain:1521/xe
-   ```
-3. Create database tables (SQL provided separately)
-4. Uncomment in `server.js`:
-   ```javascript
-   await initializeDatabase()
-   ```
+Use local test accounts and local data. Avoid posting real user credentials or password hashes.
 
 ## Troubleshooting
 
-### Port Already in Use
-```bash
-# Change PORT in .env or use different port
-PORT=3002 npm start
-```
+- **Missing `JWT_SECRET`:** set it in `backend/.env` and restart the backend.
+- **Port in use:** set `PORT` to an available port and ensure the frontend API base URL matches the backend.
+- **Password-reset email not delivered:** verify the SMTP host, port, user, and app password. The mail service logs that delivery failed when SMTP is unavailable.
+- **Data changes missing:** confirm the process has write access to `backend/mock_db.json`; back up the file before manual edits.
+- **CORS/network errors:** ensure the backend is running and the frontend is configured for the same host and port.
 
-### Email Not Sending
-- Verify Gmail App Password is correct
-- Check "Less secure app access" settings in Gmail
-- Ensure EMAIL_USER and EMAIL_PASSWORD are correct
-
-### CORS Issues
-- Verify FRONTEND_URL in `.env` matches your frontend URL
-- Default is `http://localhost:5173`
-
-### File Storage Issues
-- Ensure backend has write permissions to `./data` directory
-- Check if `data/` directory exists
-
-## Security Notes
-- Change JWT_SECRET before production
-- Use strong passwords
-- Configure CORS properly for production domains
-- Use HTTPS in production
-- Store sensitive data in environment variables
-- Hash passwords with bcryptjs (already implemented)
+For general frontend commands and active browser routes, see [README.md](./README.md).

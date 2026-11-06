@@ -84,7 +84,7 @@ const ResetPassword = () => {
     }}>
       <div style={{ width: '100%', maxWidth: '500px' }}>
         <h1 style={{ textAlign: 'center', color: '#00ff85', marginBottom: '30px', fontWeight: '900' }}>
-          Tournament Hobe
+          Smart Tournament Planner
         </h1>
         
         <div style={{ 

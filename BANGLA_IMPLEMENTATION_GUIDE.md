@@ -1,393 +1,84 @@
-# Tournament Hobe - Implementation Summary (বাংলা নির্দেশনা সহ)
+# Smart Tournament Planner — বাংলা নির্দেশিকা
 
----
+এই নির্দেশিকায় বর্তমান অ্যাপ চালু করা, প্রধান পৃষ্ঠাগুলো ব্যবহার করা এবং গুরুত্বপূর্ণ সীমাবদ্ধতা যাচাই করার সংক্ষিপ্ত বর্ণনা রয়েছে। অ্যাপের সক্রিয় React entry point হলো `src/main.jsx`।
 
-## সম্পূর্ণ বাস্তবায়ন সারসংক্ষেপ
+## চালু করার নিয়ম
 
-আপনার Tournament Hobe প্রজেক্টের সম্পূর্ণ ফ্রন্টএন্ড এবং ডেটা লজিক তৈরি করা হয়েছে।
+প্রকল্পের মূল ফোল্ডারে (যেখানে এই README এবং frontend `package.json` আছে) টার্মিনাল খুলুন:
 
----
-
-## কী করা হয়েছে ✓
-
-### ১. অথেন্টিকেশন সিস্টেম
-- ✓ Organizer রেজিস্ট্রেশন
-- ✓ Organizer লগইন
-- ✓ সেশন ম্যানেজমেন্ট
-- ✓ প্রটেক্টেড রুট
-
-### ২. টুর্নামেন্ট ম্যানেজমেন্ট
-- ✓ টুর্নামেন্ট তৈরি করুন
-- ✓ সকল টুর্নামেন্ট দেখুন
-- ✓ টুর্নামেন্ট এডিট/ডিলিট
-
-### ৩. টিম ম্যানেজমেন্ট
-- ✓ টিম রেজিস্ট্রেশন
-- ✓ টিম তথ্য পরিচালনা
-- ✓ টিম ডিলিট
-
-### ৪. খেলোয়াড় ম্যানেজমেন্ট
-- ✓ খেলোয়াড় রেজিস্ট্রেশন
-- ✓ জার্সি নম্বর এবং পজিশন
-- ✓ খেলোয়াড়ের তথ্য ট্র্যাক করুন
-
-### ৫. ম্যাচ ম্যানেজমেন্ট
-- ✓ ম্যাচ শিডিউল করুন
-- ✓ টিম নির্বাচন
-- ✓ তারিখ, সময়, ভেন্যু সেট করুন
-
-### ৬. পয়েন্ট টেবিল এবং স্ট্যান্ডিং
-- ✓ টিম র‍্যাঙ্কিং প্রদর্শন
-- ✓ জয়/ক্ষতি রেকর্ড
-- ✓ পয়েন্ট গণনা
-
-### ৭. পুরস্কার এবং স্বীকৃতি
-- ✓ ম্যান অফ দ্য ম্যাচ
-- ✓ ম্যান অফ দ্য সিরিজ
-- ✓ টপ স্কোরার তালিকা
-
-### ৮. বাজেট এবং খরচ ট্র্যাকিং
-- ✓ বাজেট সেট করুন
-- ✓ খরচ যোগ করুন এবং ট্র্যাক করুন
-- ✓ বাজেট সারসংক্ষেপ প্রদর্শন
-
-### ৯. ড্যাশবোর্ড
-- ✓ মূল ড্যাশবোর্ড উইন্ডো
-- ✓ সাইডবার নেভিগেশন
-- ✓ দ্রুত অ্যাকশন বাটন
-
----
-
-## ফাইল অবস্থান এবং উদ্দেশ্য
-
-### অথেন্টিকেশন
-```
-src/components/auth/
-├── OrganizerLogin.jsx       ← লগইন পেজ
-├── OrganizerRegister.jsx    ← রেজিস্ট্রেশন পেজ
-└── ProtectedRoute.jsx       ← রুট সুরক্ষা
-```
-
-### মূল উপাদান
-```
-src/components/
-├── dashboard/Dashboard.jsx           ← মেইন ড্যাশবোর্ড
-├── tournament/TournamentCreate.jsx   ← টুর্নামেন্ট তৈরি
-├── tournament/TournamentList.jsx     ← টুর্নামেন্ট তালিকা
-├── team/TeamManagement.jsx           ← টিম পরিচালনা
-├── player/PlayerManagement.jsx       ← খেলোয়াড় পরিচালনা
-├── match/MatchManagement.jsx         ← ম্যাচ পরিচালনা
-├── statistics/StandingsTable.jsx     ← স্ট্যান্ডিং টেবিল
-├── awards/AwardManagement.jsx        ← পুরস্কার পরিচালনা
-└── budget/BudgetManagement.jsx       ← বাজেট পরিচালনা
-```
-
-### সেবা এবং প্রসঙ্গ
-```
-src/
-├── services/dataService.js    ← ডেটা অপারেশন (localStorage ব্যবহার করে)
-├── context/AuthContext.jsx    ← অথেন্টিকেশন অবস্থা
-├── App.jsx                    ← মূল রাউটিং অ্যাপ্লিকেশন
-└── index.css                  ← বৈশ্বিক স্টাইল
-```
-
----
-
-## কিভাবে শুরু করবেন
-
-### ধাপ ১: প্যাকেজ ইনস্টল করুন
 ```bash
-cd tournament-hobe
 npm install
-```
-
-### ধাপ ২: উন্নয়ন সার্ভার চালু করুন
-```bash
 npm run dev
 ```
 
-### ধাপ ৩: ব্রাউজারে খুলুন
-```
-http://localhost:5173
-```
+Vite যে URL দেখাবে সেটি ব্রাউজারে খুলুন; সাধারণত `http://localhost:5173`।
 
-### ধাপ ৪: পরীক্ষা করুন
-1. `/register` এ যান এবং নিবন্ধন করুন
-2. `/login` এ যান এবং লগইন করুন
-3. ড্যাশবোর্ডে আপনার টুর্নামেন্ট তৈরি করুন
+Backend চালাতে আলাদা টার্মিনালে:
 
----
-
-## ডেটা মডেল
-
-### সংগঠক (Organizer)
-```
-{
-  id: অনন্য পরিচয়
-  name: নাম
-  email: ইমেইল
-  password: পাসওয়ার্ড
-  contactInfo: যোগাযোগ তথ্য
-}
+```bash
+cd backend
+npm install
+npm run dev
 ```
 
-### টুর্নামেন্ট
-```
-{
-  id: অনন্য পরিচয়
-  organizerId: সংগঠক ID
-  name: টুর্নামেন্ট নাম
-  sport: ফুটবল / ক্রিকেট / ব্যাডমিন্টন
-  location: অবস্থান
-  startDate: শুরু তারিখ
-  endDate: শেষ তারিখ
-  budget: বাজেট
-  status: পরিকল্পনা / চলছে / সম্পন্ন
-}
-```
+Backend সাধারণত `http://localhost:3001`-এ চলে। চালানোর আগে `backend/.env`-এ একটি ব্যক্তিগত `JWT_SECRET` থাকতে হবে। বাস্তব secret বা password GitHub-এ প্রকাশ করবেন না।
 
-### টিম
-```
-{
-  id: অনন্য পরিচয়
-  tournamentId: টুর্নামেন্ট ID
-  name: টিম নাম
-  category: ক্যাটাগরি
-}
-```
+## প্রধান পৃষ্ঠা ও কাজ
 
-### খেলোয়াড়
-```
-{
-  id: অনন্য পরিচয়
-  teamId: টিম ID
-  name: নাম
-  jerseyNumber: জার্সি নম্বর
-  position: পজিশন
-}
-```
+| URL | কাজ |
+| --- | --- |
+| `/login` | Organizer লগইন |
+| `/register` | Organizer account তৈরি |
+| `/authority/login` | Venue authority লগইন |
+| `/authority/register` | Venue authority নিবন্ধন |
+| `/forgot-password` | পাসওয়ার্ড reset link চাওয়া |
+| `/reset-password` | reset token দিয়ে নতুন password |
+| `/dashboard` | Organizer dashboard |
+| `/tournaments` | টুর্নামেন্ট দেখা |
+| `/tournaments/create` | টুর্নামেন্ট তৈরি |
+| `/tournaments/edit/:id` | টুর্নামেন্ট সম্পাদনা |
+| `/tournaments/:id` | টুর্নামেন্টের বিবরণ ও বিভাগ |
+| `/tournaments/:id/teams` | দল পরিচালনা |
+| `/tournaments/:id/players` | খেলোয়াড় পরিচালনা |
+| `/tournaments/:id/matches` | ম্যাচ ও ফলাফল পরিচালনা |
+| `/tournaments/:id/budget` | বাজেট পরিচালনা |
+| `/turfs`, `/turfs/:id` | Venue/turf দেখা |
+| `/authority/dashboard` | Venue authority dashboard |
+| `/authority/turfs/new` | নতুন venue নিবন্ধন |
+| `/authority/turfs/:id/edit` | venue সম্পাদনা |
+| `/authority/turfs/:id` | venue ও field পরিচালনা |
 
-### ম্যাচ
-```
-{
-  id: অনন্য পরিচয়
-  tournamentId: টুর্নামেন্ট ID
-  team1Id: টিম ১ ID
-  team2Id: টিম ২ ID
-  matchDate: ম্যাচ তারিখ
-  matchTime: ম্যাচ সময়
-  venue: ভেন্যু
-  status: পেন্ডিং / চলছে / সম্পন্ন
-}
-```
+টুর্নামেন্টের বিস্তারিত পৃষ্ঠায় Home, Matches, Squads, Points Table এবং অন্যান্য বিভাগ tab হিসেবে দেখা যায়। Standings ও Awards-এর পুরোনো আলাদা route বর্তমান সক্রিয় router-এ নেই।
 
-### খরচ
-```
-{
-  id: অনন্য পরিচয়
-  tournamentId: টুর্নামেন্ট ID
-  category: ক্যাটাগরি
-  amount: পরিমাণ
-  description: বিবরণ
-}
-```
+## ভূমিকা ও তথ্য সংরক্ষণ
 
----
+- Organizer এবং venue authority-এর login ও registration আলাদা route এবং backend API ব্যবহার করে।
+- Authentication token ও account তথ্য browser-এর local storage-এ থাকে।
+- Backend বর্তমানে `backend/mock_db.json`-এ JSON data সংরক্ষণ করে। এতে account, tournament, team, player, match, turf, booking ও review data থাকতে পারে।
+- JSON database সম্পাদনা বা reset করার আগে backup রাখুন। User data এবং password hash ব্যক্তিগত তথ্য হিসেবে বিবেচনা করুন।
+- Oracle, MongoDB এবং পৃথক file-storage helper repository-তে রয়েছে, তবে বর্তমান `backend/server.js` সেগুলো চালু করে না।
 
-## বৈশিষ্ট্য পরীক্ষা চেকলিস্ট
+## ম্যানুয়াল যাচাই তালিকা
 
-### রেজিস্ট্রেশন এবং লগইন
-- [ ] নতুন Organizer রেজিস্টার করুন
-- [ ] নিবন্ধিত অ্যাকাউন্ট দিয়ে লগইন করুন
-- [ ] লগআউট পরীক্ষা করুন
-- [ ] পুনরায় লগইন পৃষ্ঠায় নির্দেশিত হচ্ছেন কি তা যাচাই করুন
+- [ ] Organizer হিসেবে `/register`-এ account তৈরি ও `/login`-এ প্রবেশ
+- [ ] Venue authority হিসেবে `/authority/register` ও `/authority/login` যাচাই
+- [ ] Organizer dashboard থেকে tournament তৈরি, দেখা ও সম্পাদনার চেষ্টা
+- [ ] Tournament detail পৃষ্ঠা থেকে team, player, match ও budget পৃষ্ঠা খোলা
+- [ ] Authority dashboard থেকে turf তৈরি এবং field পরিচালনা
+- [ ] Logout-এর পর protected পৃষ্ঠা পুনরায় খোলার আচরণ যাচাই
 
-### টুর্নামেন্ট পরিচালনা
-- [ ] নতুন টুর্নামেন্ট তৈরি করুন
-- [ ] সমস্ত বিবরণ পূরণ করুন (নাম, খেলা, অবস্থান, তারিখ, বাজেট)
-- [ ] টুর্নামেন্ট তালিকায় প্রদর্শিত হয় কি তা যাচাই করুন
-- [ ] টুর্নামেন্ট সম্পাদনা করুন
-- [ ] টুর্নামেন্ট মুছুন
+**বর্তমান সীমাবদ্ধতা:** Player ও Team পৃষ্ঠায় ব্যবহৃত `getPlayersByTeam`, `registerPlayer`, `deletePlayer`, এবং `deleteTeam` function `dataService.js`-এ নেই বলে আগের frontend build-এ warning দেখা গেছে। তাই সংশ্লিষ্ট add/delete কাজ নির্ভরযোগ্য ধরে নেওয়ার আগে এই warning ঠিক হয়েছে কি না যাচাই করুন।
 
-### টিম ব্যবস্থাপনা
-- [ ] টিম যোগ করুন
-- [ ] সমস্ত টিম তালিকায় প্রদর্শিত হয় কি তা যাচাই করুন
-- [ ] টিম মুছুন
+## সাধারণ সমস্যা
 
-### খেলোয়াড় ব্যবস্থাপনা
-- [ ] খেলোয়াড় যোগ করুন
-- [ ] টিম নির্বাচন করুন
-- [ ] জার্সি নম্বর এবং পজিশন যোগ করুন
-- [ ] খেলোয়াড় তালিকায় প্রদর্শিত হয় কি তা যাচাই করুন
-- [ ] খেলোয়াড় মুছুন
+- **Backend চালু হয় না:** `backend/.env`-এ `JWT_SECRET` আছে কি না পরীক্ষা করুন।
+- **Frontend API-তে সংযোগ হয় না:** Backend চালু আছে এবং port `3001` ব্যবহার করছে কি না দেখুন।
+- **Reset email আসে না:** SMTP পরিবেশ ভেরিয়েবল সঠিকভাবে সেট করা আছে কি না যাচাই করুন।
+- **পরিবর্তিত data হারিয়ে গেছে:** `backend/mock_db.json`-এর backup পুনরুদ্ধার করুন; reset-এর আগে backup রাখা জরুরি।
+- **পৃষ্ঠায় সমস্যা:** Browser developer tools-এর Console এবং Network tab দেখুন।
 
-### ম্যাচ ব্যবস্থাপনা
-- [ ] ম্যাচ শিডিউল করুন
-- [ ] উভয় টিম নির্বাচন করুন
-- [ ] তারিখ এবং সময় সেট করুন
-- [ ] ম্যাচ তালিকায় প্রদর্শিত হয় কি তা যাচাই করুন
+## ডেটা ধারণা
 
-### পয়েন্ট টেবিল
-- [ ] স্ট্যান্ডিং পৃষ্ঠা খুলুন
-- [ ] টিম র‍্যাঙ্কিং প্রদর্শিত হয় কি তা যাচাই করুন
+Tournament-এর সঙ্গে দল, খেলোয়াড়, ম্যাচ, সময়সূচি, ফলাফল ও বাজেটের তথ্য যুক্ত থাকে। Venue authority turf এবং তার fields পরিচালনা করেন; Organizer venue দেখতে ও booking-সংশ্লিষ্ট কাজ করতে পারেন। Backend role এবং turf ownership যাচাই করে।
 
-### বাজেট ট্র্যাকিং
-- [ ] টুর্নামেন্ট বাজেট সেট করুন
-- [ ] খরচ যোগ করুন
-- [ ] বাকি বাজেট হিসাব করা হয় কি তা যাচাই করুন
-
-### পুরস্কার ব্যবস্থাপনা
-- [ ] পুরস্কার পৃষ্ঠা খুলুন
-- [ ] ম্যান অফ দ্য ম্যাচ প্রদর্শিত হয় কি তা যাচাই করুন
-- [ ] টপ স্কোরার প্রদর্শিত হয় কি তা যাচাই করুন
-
----
-
-## রুটস (পথগুলি)
-
-| URL | বিবরণ |
-|-----|--------|
-| `/register` | নতুন Organizer রেজিস্টার করুন |
-| `/login` | Organizer লগইন করুন |
-| `/dashboard` | মূল ড্যাশবোর্ড |
-| `/tournaments` | সমস্ত টুর্নামেন্ট দেখুন |
-| `/tournaments/create` | নতুন টুর্নামেন্ট তৈরি করুন |
-| `/tournaments/1/teams` | টিম পরিচালনা |
-| `/tournaments/1/players` | খেলোয়াড় পরিচালনা |
-| `/tournaments/1/matches` | ম্যাচ পরিচালনা |
-| `/tournaments/1/standings` | স্ট্যান্ডিং টেবিল |
-| `/tournaments/1/awards` | পুরস্কার এবং স্বীকৃতি |
-| `/tournaments/1/budget` | বাজেট ব্যবস্থাপনা |
-
----
-
-## কী সংশোধন প্রয়োজন
-
-### ব্যাকএন্ড সংযোগের জন্য
-
-**ফাইল:** `src/services/dataService.js`
-
-প্রতিটি ফাংশন `localStorage` এর পরিবর্তে আপনার API তে কল করবে।
-
-উদাহরণ:
-```javascript
-// বর্তমান (localStorage):
-localStorage.setItem('tournaments', JSON.stringify(tournaments))
-
-// পরিবর্তন করুন (API):
-const response = await fetch('http://your-api.com/tournaments', {
-  method: 'POST',
-  body: JSON.stringify(tournamentData)
-})
-```
-
-### ডেটাবেস সেটআপের জন্য
-
-নিম্নলিখিত টেবিল তৈরি করুন:
-- organizers
-- tournaments
-- teams
-- players
-- matches
-- groups
-- expenses
-- awards
-
----
-
-## কমান্ড এবং কাজ
-
-| কমান্ড | কাজ |
-|--------|------|
-| `npm install` | প্যাকেজ ইনস্টল করুন |
-| `npm run dev` | উন্নয়ন সার্ভার চালু করুন |
-| `npm run build` | উৎপাদনের জন্য বিল্ড করুন |
-| `npm run lint` | কোড লিন্টিং চালু করুন |
-
----
-
-## প্রধান ফাইলগুলির উদ্দেশ্য
-
-### App.jsx
-- মূল রাউটিং সেটআপ
-- সমস্ত পৃষ্ঠাগুলির জন্য নেভিগেশন
-- অথেন্টিকেশন প্রসঙ্গ প্রদান করে
-
-### Dashboard.jsx
-- সংগঠকদের জন্য মূল পৃষ্ঠা
-- সাইডবার মেনু এবং নেভিগেশন
-- দ্রুত পরিসংখ্যান এবং অ্যাকশন
-
-### AuthContext.jsx
-- বৈশ্বিক অথেন্টিকেশন অবস্থা
-- লগইন/লগআউট কার্যকারিতা
-- সেশন পরিচালনা
-
-### dataService.js
-- সমস্ত ডেটা অপারেশন
-- ডেটাবেস থেকে আসে / যায় এখানে
-- API কল পয়েন্ট
-
----
-
-## উন্নয়ন টিপস
-
-1. **ব্রাউজার ডেভেলপার টুলস ব্যবহার করুন** (F12)
-   - কনসল ত্রুটি দেখুন
-   - নেটওয়ার্ক অনুরোধ পরীক্ষা করুন
-
-2. **localStorage সাফ করুন**
-   - ডেভেলপার টুলস → অ্যাপ্লিকেশন → localStorage
-
-3. **পরিবর্তনগুলি সংরক্ষণ করুন**
-   - Ctrl+S (বা Cmd+S ম্যাক-এ)
-   - ব্রাউজার স্বয়ংক্রিয়ভাবে রিফ্রেশ করবে
-
----
-
-## সাধারণ সমস্যা এবং সমাধান
-
-**সমস্যা:** ডেটা সংরক্ষণ হচ্ছে না
-**সমাধান:** localStorage সাফ করুন এবং পুনরায় চেষ্টা করুন
-
-**সমস্যা:** লগইন পরে ড্যাশবোর্ডে যায় না
-**সমাধান:** ব্রাউজার কনসল ত্রুটি দেখুন
-
-**সমস্যা:** পৃষ্ঠাগুলি লোড হচ্ছে না
-**সমাধান:** npm install চালান এবং সার্ভার পুনরায় চালু করুন
-
----
-
-## পরবর্তী পদক্ষেপ
-
-1. **ব্যাকএন্ড তৈরি করুন** (Node.js, Express, MongoDB/PostgreSQL)
-2. **API সংযোগ করুন** (dataService.js আপডেট করুন)
-3. **ডেটাবেস সেটআপ করুন**
-4. **পরীক্ষা করুন** (সমস্ত বৈশিষ্ট্য পরীক্ষা করুন)
-5. **স্থাপন করুন** (Vercel, Heroku, ইত্যাদি)
-
----
-
-## যোগাযোগ এবং সহায়তা
-
-সমস্যার জন্য:
-1. ব্রাউজার কনসল ত্রুটি চেক করুন
-2. [SETUP_GUIDE.md](SETUP_GUIDE.md) পড়ুন
-3. [PROJECT_IMPLEMENTATION_GUIDE.md](PROJECT_IMPLEMENTATION_GUIDE.md) পড়ুন
-
----
-
-## সারসংক্ষেপ
-
-✅ সম্পূর্ণ ফ্রন্টএন্ড প্রস্তুত
-✅ সমস্ত উপাদান তৈরি
-✅ ডেটা লজিক বাস্তবায়িত
-⏳ ব্যাকএন্ড সংযোগ বাকি
-⏳ ডেটাবেস সেটআপ বাকি
-
-**আপনার Tournament Hobe অ্যাপ্লিকেশন এখন পরীক্ষার জন্য প্রস্তুত!** 🏆
-
----
-
-**Last Updated:** এপ্রিল 16, 2026
-**Created for:** CSE-347 Course Project
+আরও বিস্তারিত frontend command ও backend API তালিকার জন্য [README.md](./README.md) এবং [BACKEND_SETUP.md](./BACKEND_SETUP.md) দেখুন।

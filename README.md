@@ -1,174 +1,93 @@
-# Tournament Hobe - Tournament Management System
+# Smart Tournament Planner
 
-## Overview
+Smart Tournament Planner is a React application with an Express API for organizer tournament management and venue (turf) management. The active frontend is bootstrapped from `src/main.jsx`; the separate `src/App.jsx` is not the active entry point.
 
-Tournament Hobe is a web-based tournament management system designed for organizing sports tournaments (Football, Cricket, Badminton) with features for team/player management, match scheduling, statistics tracking, and budget management.
+## Requirements
 
-## Project Status
+- Node.js compatible with the installed Vite version
+- npm
 
-✅ **Frontend Components**: 100% Complete  
-⏳ **Backend API**: Not Started (Ready for integration)  
-⏳ **Database**: Not Started (Ready for setup)  
+## Run locally
 
----
+Run the frontend from the directory containing this README and `package.json`:
 
-## Quick Start
+```bash
+npm install
+npm run dev
+```
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+Open the URL Vite prints (normally `http://localhost:5173`).
 
-### Installation
+To run the API, use a second terminal:
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-2. **Start development server:**
-   ```bash
-   npm run dev
-   ```
+The API listens on port `3001` by default. It requires `backend/.env` with a private `JWT_SECRET`. Optional SMTP settings enable password-reset email delivery. Keep real secrets in the local environment and never commit them.
 
-3. **Open in browser:**
-   - Navigate to `http://localhost:5173`
-
-### Build for Production
+Build and lint the frontend:
 
 ```bash
 npm run build
+npm run lint
 ```
 
----
-
-## Features Implemented
-
-### 1. Authentication System ✓
-- Organizer registration with email validation
-- Secure login with password verification
-- Session persistence using localStorage
-- Protected routes for authenticated users
-- Logout functionality
-
-### 2. Tournament Management ✓
-- Create tournaments with details (name, sport, location, date, format, budget)
-- View all tournaments by organizer
-- Edit and delete tournaments
-- Track tournament status (Planning, Ongoing, Completed)
-
-### 3. Team Management ✓
-- Register teams in tournaments
-- Add team details (name, category, logo placeholder)
-- Edit and delete teams
-- View all teams in tournament
-
-### 4. Player Management ✓
-- Register players to teams
-- Assign jersey numbers and positions
-- Track player information
-- View player list with team details
-
-### 5. Match Management ✓
-- Schedule matches between teams
-- Set match date, time, and venue
-- Assign group/fixture information
-- View match list
-
-### 6. Statistics & Standings ✓
-- Display points table with team rankings
-- Show win/loss/draw records
-- Calculate and display points
-- Support for different sports rules
-
-### 7. Awards Management ✓
-- Man of the Match selection
-- Man of the Series award
-- Top scorers ranking
-- Award history tracking
-
-### 8. Budget Management ✓
-- Set tournament budget
-- Track and categorize expenses
-- Calculate remaining budget
-- Display expense breakdown
-
-### 9. Dashboard ✓
-- Main organizer dashboard
-- Sidebar navigation
-- Quick stats cards
-- Quick action buttons
-- Responsive layout
-
----
-
-## Project Structure
-
-```
-src/
-├── components/
-│   ├── auth/              # Authentication components
-│   ├── dashboard/         # Main dashboard
-│   ├── tournament/        # Tournament management
-│   ├── team/             # Team management
-│   ├── player/           # Player management
-│   ├── match/            # Match management
-│   ├── statistics/       # Statistics & standings
-│   ├── awards/           # Awards management
-│   └── budget/           # Budget management
-├── services/
-│   └── dataService.js    # Data operations
-├── context/
-│   └── AuthContext.jsx   # Auth state management
-├── App.jsx               # Main app with routing
-└── index.css             # Global styles
-```
-
----
-
-## Available Routes
+## Active frontend routes
 
 | Route | Purpose |
-|-------|---------|
+| --- | --- |
 | `/login` | Organizer login |
-| `/register` | Organizer registration |
-| `/dashboard` | Main dashboard |
-| `/tournaments` | List tournaments |
-| `/tournaments/create` | Create tournament |
-| `/tournaments/:id` | Tournament details |
+| `/register` | Organizer account registration |
+| `/authority/login` | Venue authority login |
+| `/authority/register` | Venue authority registration |
+| `/forgot-password` | Request a password reset |
+| `/reset-password` | Set a new password from a reset link |
+| `/dashboard` | Organizer dashboard |
+| `/tournaments` | Browse tournaments |
+| `/tournaments/create` | Create a tournament |
+| `/tournaments/edit/:id` | Edit a tournament |
+| `/tournaments/:id` | Tournament details and in-page sections |
 | `/tournaments/:id/teams` | Team management |
 | `/tournaments/:id/players` | Player management |
 | `/tournaments/:id/matches` | Match management |
-| `/tournaments/:id/standings` | Standings |
-| `/tournaments/:id/awards` | Awards |
-| `/tournaments/:id/budget` | Budget |
+| `/tournaments/:id/budget` | Budget management |
+| `/turfs`, `/turfs/:id` | Browse turf venues |
+| `/authority/dashboard` | Venue authority dashboard |
+| `/authority/turfs/new` | Register a venue |
+| `/authority/turfs/:id/edit` | Edit a venue |
+| `/authority/turfs/:id` | Manage a venue and its fields |
 
----
+Protected routes require an authenticated account with the appropriate role. Organizer and venue authority login/registration use separate routes and API operations.
 
-## Getting Started
+## Project layout
 
-1. Install dependencies: `npm install`
-2. Start server: `npm run dev`
-3. Register as organizer at `/register`
-4. Login and start creating tournaments
-5. Manage teams, players, and matches
-6. Track budget and view statistics
+```text
+index.html
+public/                    Static assets
+src/
+  main.jsx                 Active React entry and route configuration
+  components/              Authentication, dashboard, tournament, and turf UI
+  context/AuthContext.jsx  Authentication state
+  services/                Frontend API and tournament data helpers
+  utils/theme.js           Sport theme helpers
+backend/
+  server.js                Express API entry point
+  routes/ controllers/     API routes and request handlers
+  middleware/ models/      Authorization, errors, and Mongoose schemas
+  services/mockDb.js       Active JSON-backed data store
+```
 
----
+`src/App.jsx` is an older, inactive router; the Vite entry in `index.html` loads `src/main.jsx`. Do not use the older route list in `App.jsx` as the active route map.
 
-## Documentation
+## Data and current limitations
 
-- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Detailed setup and implementation guide
-- **[PROJECT_IMPLEMENTATION_GUIDE.md](PROJECT_IMPLEMENTATION_GUIDE.md)** - Project roadmap and architecture
+- Authentication state is kept in browser local storage. Tournament and venue data are served by the backend.
+- The backend currently uses `backend/mock_db.json` as its active store. Back up this file before resetting or replacing local data.
+- Oracle and MongoDB connection helpers, Mongoose models, and a separate file-storage service remain in the repository, but `backend/server.js` does not initialize those alternate stores. Their code and dependencies are retained.
+- The active frontend build has previously reported missing `dataService` exports called by the team/player screens (`getPlayersByTeam`, `registerPlayer`, `deletePlayer`, and `deleteTeam`). Review these existing warnings before relying on those operations.
+- The frontend currently has no test script or test/spec files.
 
----
-
-## Next Steps
-
-1. Connect to backend API
-2. Set up database
-3. Add advanced features (exports, notifications, etc.)
-4. Deploy to production
-
----
-
-**Tournament Hobe - Making Tournament Management Simple! 🏆**
+See [BACKEND_SETUP.md](./BACKEND_SETUP.md) for backend environment, API, and data-store details. The [Bangla implementation guide](./BANGLA_IMPLEMENTATION_GUIDE.md) provides a Bengali overview and manual verification checklist.

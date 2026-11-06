@@ -45,7 +45,7 @@ const ForgotPassword = () => {
     }}>
       <div style={{ width: '100%', maxWidth: '500px' }}>
         <h1 style={{ textAlign: 'center', color: '#00ff85', marginBottom: '30px', fontWeight: '900' }}>
-          Tournament Hobe
+          Smart Tournament Planner
         </h1>
         <div style={{ 
           background: 'rgba(30, 41, 59, 0.7)', 
@@ -135,7 +135,7 @@ const ForgotPassword = () => {
               textAlign: 'left',
               marginBottom: '30px'
             }}>
-              <p style={{ color: '#94a3b8', fontSize: '12px', marginBottom: '5px' }}>From: Tournament Hobe Team</p>
+              <p style={{ color: '#94a3b8', fontSize: '12px', marginBottom: '5px' }}>From: Smart Tournament Planner Team</p>
               <p style={{ color: 'white', fontWeight: 'bold', marginBottom: '15px' }}>Subject: Reset Your Password</p>
               <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>
                 Hi there! Click the button below to reset your password. This link is for testing purposes.

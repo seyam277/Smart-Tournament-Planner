@@ -50,7 +50,7 @@ const OrganizerLogin = () => {
     }}>
       <div style={{ width: '100%', maxWidth: '500px' }}>
         <h1 style={{ textAlign: 'center', color: '#00ff85', marginBottom: '30px', fontWeight: '900' }}>
-          Tournament Hobe
+          Smart Tournament Planner
         </h1>
       <div style={{ 
         background: 'rgba(30, 41, 59, 0.7)', 
@@ -143,7 +143,7 @@ const OrganizerLogin = () => {
               boxShadow: isLoading ? 'none' : '0 0 20px rgba(0, 255, 133, 0.3)'
             }}
           >
-            {isLoading ? 'Scanning Arena...' : 'Access Suite'}
+            {isLoading ? 'Scanning Arena...' : 'Login'}
           </button>
         </form>
 
@@ -157,13 +157,13 @@ const OrganizerLogin = () => {
               fontWeight: '700'
             }}
           >
-            Initialize Account
+            Organizer Account
           </Link>
         </p>
         <p style={{ textAlign: 'center', marginTop: '12px', color: '#94a3b8', fontSize: '14px' }}>
           Turf Authority?{' '}
           <Link to="/authority/login" style={{ color: '#00ff85', textDecoration: 'none', fontWeight: '700' }}>
-            Authority Login
+            Venue Login
           </Link>
         </p>
         </div>

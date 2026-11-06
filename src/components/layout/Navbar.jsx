@@ -65,8 +65,8 @@ const Navbar = () => {
     <nav className="navbar" style={{ background: '#0f172a', borderBottom: '1px solid #334155', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
       <div className="container">
         <div className="navbar-top">
-          <Link to={user?.role === 'authority' ? '/authority/dashboard' : '/dashboard'} className="navbar-logo" style={{ textTransform: 'lowercase', color: '#00ff85', textShadow: '0 0 10px rgba(0, 255, 133, 0.5)' }}>
-            tournament hobe
+          <Link to={user?.role === 'authority' ? '/authority/dashboard' : '/dashboard'} className="navbar-logo" style={{ color: '#00ff85', textShadow: '0 0 10px rgba(0, 255, 133, 0.5)' }}>
+            Smart Tournament Planner
           </Link>
           
           <ul className="navbar-links">

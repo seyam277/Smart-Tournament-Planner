@@ -40,7 +40,7 @@ const AuthorityLogin = () => {
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#0f172a', padding: '20px', color: 'white' }}>
       <section style={{ width: '100%', maxWidth: '460px', background: '#1e293b', padding: '32px', borderRadius: '20px' }}>
-        <h1 style={{ color: '#00ff85', textAlign: 'center' }}>Turf Authority Login</h1>
+        <h1 style={{ color: '#00ff85', textAlign: 'center' }}>Venue Login</h1>
         {error && <div role="alert" style={{ color: '#f87171', marginBottom: '16px' }}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <label style={{ display: 'block', marginBottom: '18px', color: '#cbd5e1' }}>

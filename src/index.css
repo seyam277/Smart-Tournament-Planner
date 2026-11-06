@@ -91,16 +91,6 @@ h1, h2, h3, h4 {
   background: var(--cric-dark-green);
 }
 
-.btn-outline {
-  background: transparent;
-  border: 1px solid var(--cric-green);
-  color: var(--cric-green);
-}
-
-.btn-outline:hover {
-  background: rgba(0, 146, 112, 0.05);
-}
-
 /* Navigation Styles */
 .navbar {
   background: var(--cric-green);
@@ -155,81 +145,5 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   font-size: 12px;
-}
-
-/* Multi-step Wizard Styles */
-.wizard-steps {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  position: relative;
-}
-
-.wizard-step {
-  flex: 1;
-  text-align: center;
-  z-index: 1;
-}
-
-.step-number {
-  width: 30px;
-  height: 30px;
-  background: white;
-  border: 2px solid var(--cric-border);
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-.wizard-step.active .step-number {
-  border-color: var(--cric-green);
-  color: var(--cric-green);
-}
-
-.wizard-step.completed .step-number {
-  background: var(--cric-green);
-  border-color: var(--cric-green);
-  color: white;
-}
-
-/* Match Cards */
-.match-card {
-  padding: 15px;
-  cursor: pointer;
-}
-
-.match-header {
-  font-size: 12px;
-  color: var(--cric-gray);
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.match-team {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.team-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-}
-
-.team-score {
-  font-weight: 700;
-}
-
-.match-status {
-  font-size: 13px;
-  color: #d0021b; /* Red for status like "Live" or match result */
-  margin-top: 10px;
 }
 
